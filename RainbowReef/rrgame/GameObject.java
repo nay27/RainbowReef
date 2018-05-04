@@ -25,10 +25,10 @@ import javax.imageio.ImageIO;
     BufferedImage sprite;
     private static HashMap<String, BufferedImage> spritesMap;
     
-    GameObject(int x, int y, BufferedImage img){
+    GameObject(int x, int y, String img){
         this.x = x;
         this.y = y;
-        this.sprite = img;
+        this.sprite = spritesMap.get(img);
         this.width = sprite.getWidth();
         this.height = sprite.getHeight();
         state = true;
@@ -126,4 +126,19 @@ import javax.imageio.ImageIO;
         return state;
     }
     
+    final void checkBorder(){
+        if(x + getWidth() >= Game.SCREEN_WIDTH){
+            x = Game.SCREEN_WIDTH - getWidth();
+        }
+        else if(x <= 0){
+            x = 0;
+        }
+        
+        if(y + getHeight() >= Game.SCREEN_HEIGHT){
+            y = Game.SCREEN_HEIGHT - getHeight();
+        }
+        else if(y <= 0){
+            y = 0;
+        }
+    }
 }
