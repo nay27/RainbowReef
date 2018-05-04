@@ -45,6 +45,12 @@ import javax.imageio.ImageIO;
             BufferedImage block5 = ImageIO.read(new File("rrresourcers/Block5.gif"));
             BufferedImage block6 = ImageIO.read(new File("rrresourcers/Block6.gif"));
             BufferedImage block7 = ImageIO.read(new File("rrresourcers/Block7.gif"));
+            BufferedImage blockDouble = ImageIO.read(new File("rrresourcers/Block_double.gif"));
+            BufferedImage blockLife = ImageIO.read(new File("rrresourcers/Block_life.gif"));
+            BufferedImage blockSolid = ImageIO.read(new File("rrresourcers/Block_solid.gif"));
+            BufferedImage blockSplit = ImageIO.read(new File("rrresourcers/Block_split.gif"));
+            BufferedImage katch = ImageIO.read(new File("rrresourcers/Katch.gif"));
+            BufferedImage pop = ImageIO.read(new File("rrresourcers/Pop.gif"));
             spritesMap.put("BigLeg", bigleg);
             spritesMap.put("Block1", block1);
             spritesMap.put("Block2", block2);
@@ -53,12 +59,19 @@ import javax.imageio.ImageIO;
             spritesMap.put("Block5", block5);
             spritesMap.put("Block6", block6);
             spritesMap.put("Block7", block7);
-            /*Ill fill in the rest later...the idea is just to populate a hashmap
-            with images for every gameObject - note gameObjects are blocks,
-            the player (Katch), Pop, and Bigleg*/
+            spritesMap.put("Block_double", blockDouble);
+            spritesMap.put("Block_life", blockLife);
+            spritesMap.put("Block_solid", blockSolid);
+            spritesMap.put("Block_split", blockSplit);
+            spritesMap.put("Katch", katch);
+            spritesMap.put("Pop", pop);
         }catch(IOException e){
             e.getMessage();
         }
+    }
+  
+    public static BufferedImage getSprite(String token){
+        return spritesMap.get(token);
     }
     
     @Override
