@@ -5,6 +5,7 @@
  */
 package RainbowReef.rrgame;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,10 @@ import javax.imageio.ImageIO;
     boolean state;
     BufferedImage sprite;
     private static HashMap<String, BufferedImage> spritesMap;
+    Rectangle hitbox;
+    
+       
+    
     
     GameObject(int x, int y, String img){
         this.x = x;
@@ -32,6 +37,7 @@ import javax.imageio.ImageIO;
         this.width = sprite.getWidth();
         this.height = sprite.getHeight();
         state = true;
+        this.hitbox = new Rectangle(x,y, this.width, this.height);
     }
     
     static{
@@ -76,7 +82,7 @@ import javax.imageio.ImageIO;
     
     @Override
     public abstract void update(Observable obv, Object o);
-    public abstract boolean checkCollision();
+    public abstract boolean checkCollision(Rectangle rec);
     
     final void setX(int a){
         x = a;
