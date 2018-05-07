@@ -5,6 +5,7 @@
  */
 package RainbowReef.rrgame;
 
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,20 +26,7 @@ import javax.imageio.ImageIO;
     boolean state;
     BufferedImage sprite;
     private static HashMap<String, BufferedImage> spritesMap;
-    Rectangle hitbox;
-    
-       
-    
-    
-    GameObject(int x, int y, String img){
-        this.x = x;
-        this.y = y;
-        this.sprite = spritesMap.get(img);
-        this.width = sprite.getWidth();
-        this.height = sprite.getHeight();
-        state = true;
-        this.hitbox = new Rectangle(x,y, this.width, this.height);
-    }
+    Rectangle hitBox;
     
     static{
         spritesMap = new HashMap<>();
@@ -75,6 +63,17 @@ import javax.imageio.ImageIO;
             e.getMessage();
         }
     }
+       
+    GameObject(int x, int y, String img){
+        this.x = x;
+        this.y = y;
+        this.sprite = GameObject.getSprite(img);
+        this.width = sprite.getWidth();
+        this.height = sprite.getHeight();
+        state = true;
+        this.hitBox = new Rectangle(x,y, this.width, this.height);
+    }
+    
   
     public static BufferedImage getSprite(String token){
         return spritesMap.get(token);
@@ -83,6 +82,7 @@ import javax.imageio.ImageIO;
     @Override
     public abstract void update(Observable obv, Object o);
     public abstract boolean checkCollision(Rectangle rec);
+    public abstract void render(Graphics g);
     
     final void setX(int a){
         x = a;
@@ -130,6 +130,9 @@ import javax.imageio.ImageIO;
     
     final boolean getState(){
         return state;
+    }
+    final Rectangle getHitBox(){
+        return hitBox;
     }
     
     final void checkBorder(){

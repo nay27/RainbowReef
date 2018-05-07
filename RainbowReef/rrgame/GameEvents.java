@@ -5,12 +5,12 @@
  */
 package RainbowReef.rrgame;
 
-import java.awt.Graphics;
+import java.util.Observable;
 
 /**
- * All classes that can be rendered will implement this interface
- * @author jmendo12
+ *
+ * @author christinemalicdem
  */
-public interface Renderable {
-    void render(Graphics g);
+public class GameEvents extends Observable{
+    
 }

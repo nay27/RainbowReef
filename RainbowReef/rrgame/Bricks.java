@@ -5,6 +5,7 @@
  */
 package RainbowReef.rrgame;
 
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Observable;
@@ -48,8 +49,13 @@ public class Bricks extends GameObject {
     }
 
     public boolean checkCollision(Rectangle rec) {
-        return this.hitbox.intersects(rec);
+        return this.hitBox.intersects(rec);
          //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void render(Graphics g) {
+        
     }
     
 }
