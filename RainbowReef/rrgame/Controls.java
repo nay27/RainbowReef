@@ -34,10 +34,11 @@ public class Controls extends Observable implements KeyListener{
     public void keyPressed(KeyEvent e) {
         int keyPressed = e.getKeyCode();
         if(keyPressed == right){
-            controller.toggleRightPressed();
+
+            this.controller.toggleRightPressed();
         }
         else if(keyPressed == left){
-            controller.toggleLeftPressed();
+            this.controller.toggleLeftPressed();
         }
     }
 
@@ -45,10 +46,10 @@ public class Controls extends Observable implements KeyListener{
     public void keyReleased(KeyEvent e) {
         int keyReleased = e.getKeyCode();
         if(keyReleased == right){
-            controller.unToggleRightPressed();
+            this.controller.unToggleRightPressed();
         }
         else if(keyReleased == left){
-            controller.unToggleLeftPressed();
+            this.controller.unToggleLeftPressed();
         }
     }
 }

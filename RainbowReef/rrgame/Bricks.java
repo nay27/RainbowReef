@@ -17,7 +17,6 @@ import java.util.Observable;
 public class Bricks extends GameObject {
     
     int id;
-    int hp;
     
     Bricks(int x, int y, String img){
         super(x,y,img);
@@ -40,7 +39,6 @@ public class Bricks extends GameObject {
             
         }
         
-        this.hp = this.id * 2;
     }
 
     @Override

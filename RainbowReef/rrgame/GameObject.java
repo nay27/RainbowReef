@@ -31,20 +31,20 @@ import javax.imageio.ImageIO;
     static{
         spritesMap = new HashMap<>();
         try{
-            BufferedImage bigleg = ImageIO.read(new File("rrresourcers/Bigleg.gif"));
-            BufferedImage block1 = ImageIO.read(new File("rrresourcers/Block1.gif"));
-            BufferedImage block2 = ImageIO.read(new File("rrresourcers/Block2.gif"));
-            BufferedImage block3 = ImageIO.read(new File("rrresourcers/Block3.gif"));
-            BufferedImage block4 = ImageIO.read(new File("rrresourcers/Block4.gif"));
-            BufferedImage block5 = ImageIO.read(new File("rrresourcers/Block5.gif"));
-            BufferedImage block6 = ImageIO.read(new File("rrresourcers/Block6.gif"));
-            BufferedImage block7 = ImageIO.read(new File("rrresourcers/Block7.gif"));
-            BufferedImage blockDouble = ImageIO.read(new File("rrresourcers/Block_double.gif"));
-            BufferedImage blockLife = ImageIO.read(new File("rrresourcers/Block_life.gif"));
-            BufferedImage blockSolid = ImageIO.read(new File("rrresourcers/Block_solid.gif"));
-            BufferedImage blockSplit = ImageIO.read(new File("rrresourcers/Block_split.gif"));
-            BufferedImage katch = ImageIO.read(new File("rrresourcers/Katch.gif"));
-            BufferedImage pop = ImageIO.read(new File("rrresourcers/Pop.gif"));
+            BufferedImage bigleg = ImageIO.read(new File("Bigleg.gif"));
+            BufferedImage block1 = ImageIO.read(new File("Block1.gif"));
+            BufferedImage block2 = ImageIO.read(new File("Block2.gif"));
+            BufferedImage block3 = ImageIO.read(new File("Block3.gif"));
+            BufferedImage block4 = ImageIO.read(new File("Block4.gif"));
+            BufferedImage block5 = ImageIO.read(new File("Block5.gif"));
+            BufferedImage block6 = ImageIO.read(new File("Block6.gif"));
+            BufferedImage block7 = ImageIO.read(new File("Block7.gif"));
+            BufferedImage blockDouble = ImageIO.read(new File("Block_double.gif"));
+            BufferedImage blockLife = ImageIO.read(new File("Block_life.gif"));
+            BufferedImage blockSolid = ImageIO.read(new File("Block_solid.gif"));
+            BufferedImage blockSplit = ImageIO.read(new File("Block_split.gif"));
+            BufferedImage katch = ImageIO.read(new File("Katch.gif"));
+            BufferedImage pop = ImageIO.read(new File("Pop.gif"));
             spritesMap.put("BigLeg", bigleg);
             spritesMap.put("Block1", block1);
             spritesMap.put("Block2", block2);
@@ -61,6 +61,7 @@ import javax.imageio.ImageIO;
             spritesMap.put("Pop", pop);
         }catch(IOException e){
             e.getMessage();
+            System.out.println(e);
         }
     }
        

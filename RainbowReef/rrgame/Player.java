@@ -4,12 +4,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
  * @author jmendo12
  */
-public class Player extends GameObject{
+public class Player extends GameObject implements Observer {
     
     //Key tracking, player can only move horizontally
     private boolean rightPressed;
@@ -18,10 +19,13 @@ public class Player extends GameObject{
     
     Player(int x, int y, String img){
         super(x,y,img);
-        this.speed = 3;
+        this.speed = 2;
+        
     }
     //Getters, setters, and togglers
     public void toggleRightPressed() {
+                    
+        System.out.println("test right");
         this.rightPressed = true;
     }
 
@@ -66,14 +70,15 @@ public class Player extends GameObject{
         return false;
     }
     //Equality and identification methods
+    
     @Override
     public boolean equals(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return 0;
     }
     //Rendering related methods
     @Override
@@ -82,6 +87,7 @@ public class Player extends GameObject{
         if(state){
             g2.drawImage(sprite, null, x, y);
         }
+        g2.dispose();
     }
     
 }
