@@ -15,18 +15,16 @@ public class Player extends GameObject implements Observer {
     //Key tracking, player can only move horizontally
     private boolean rightPressed;
     private boolean leftPressed;
-    private final int speed;
+    private final int SPEED;
     
     Player(int x, int y, String img){
         super(x,y,img);
-        this.speed = 2;
+        this.SPEED = 1;
         
     }
     //Getters, setters, and togglers
     public void toggleRightPressed() {
-                    
-        System.out.println("test right");
-        this.rightPressed = true;
+        this.rightPressed = true; 
     }
 
     public void toggleLeftPressed() {
@@ -55,12 +53,12 @@ public class Player extends GameObject implements Observer {
     }
     
     private void moveRight(){
-        x += speed;
+        x += SPEED;
         checkBorder();
     }
     
     private void moveLeft(){
-        x -= speed;
+        x -= SPEED;
         checkBorder();
     }
 
@@ -86,8 +84,12 @@ public class Player extends GameObject implements Observer {
         Graphics2D g2 = (Graphics2D) g;
         if(state){
             g2.drawImage(sprite, null, x, y);
+            System.out.println(toString());
         }
-        g2.dispose();
     }
-    
+    //toString for debugging
+    @Override
+    public String toString(){
+        return " x1 is " + x + " x2 is " + (x + getWidth());
+    }
 }

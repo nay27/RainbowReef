@@ -34,7 +34,6 @@ public class Controls extends Observable implements KeyListener{
     public void keyPressed(KeyEvent e) {
         int keyPressed = e.getKeyCode();
         if(keyPressed == right){
-
             this.controller.toggleRightPressed();
         }
         else if(keyPressed == left){

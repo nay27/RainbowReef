@@ -5,6 +5,7 @@
  */
 package RainbowReef.rrgame;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -21,24 +22,27 @@ import javax.swing.JPanel;
  * @author jmendo12
  */
 public class Game extends JPanel implements Runnable{
-       private boolean isRunning = false;
+    
+    private boolean isRunning = false;
     private int fps = 60;
     private int frameCount = 0;
     private final double GAME_HERTZ = 30.0;
+    private final String gameOver = "Game Over, You Lose";
     public static final int SCREEN_WIDTH = 960;
-    public static final int SCREEN_HEIGHT = 620;
+    public static final int SCREEN_HEIGHT = 720;
     private BufferedImage gameWorld;
+    private Background gameBack;
+    private Pop pop;
+    private Player katch;
     private ArrayList<GameObject> gameObjects;
     private ArrayList<GameEvents> gameEvents;
     
-    static HashMap<String, BufferedImage> spritesMap;
-    
-       
     //Constructor
     Game(){
         super();
         gameWorld = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
+        gameBack = new Background();
         gameObjects = new ArrayList<>();
         gameEvents = new ArrayList<>();
         init();
@@ -65,12 +69,10 @@ public class Game extends JPanel implements Runnable{
         final double TARGET_RENDER_TIME = 1000000000 / TARGET_FPS;
 
         int lastSecondTime = (int) (lastUpdateTime / 1000000000);
-      
-        double now;
 
         while (isRunning) {
 
-            now = System.nanoTime();
+            double now = System.nanoTime();
             int updateCount = 0;
 
             while (now - lastUpdateTime > TIME_BTWN_UPDATES
@@ -84,14 +86,8 @@ public class Game extends JPanel implements Runnable{
                 lastUpdateTime = now - TIME_BTWN_UPDATES;
             }
             
-             int tempnow = (int) (now/1000000000.0);
+            int tempnow = (int) (now/1000000000.0);
              
-                    
-                      
-            
-
-            //float interpolation = (float) Math.min(1.0f,
-            //         (now - lastUpdateTime) / TIME_BTWN_UPDATES );
             this.repaint();
             this.setFocusable(isRunning);
             this.requestFocusInWindow(isRunning);
@@ -118,17 +114,25 @@ public class Game extends JPanel implements Runnable{
 
                 now = System.nanoTime();
             }
-
+            if(!gameObjects.contains(pop)){
+                isRunning = false;
+                repaint();
+            }
         }
     }
     
     private void init(){
-        Player player = new Player(SCREEN_WIDTH/2,500,"Katch");
+        katch = new Player(SCREEN_WIDTH/2,500,"Katch");
+        pop = new Pop(SCREEN_WIDTH/2, 250, "Pop");
         GameEvents playerE = new GameEvents();
-        playerE.addObserver(player);
-        Controls playerControl = new Controls (player, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
+        GameEvents popE = new GameEvents();
+        playerE.addObserver(katch);
+        popE.addObserver(pop);
+        Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
         this.addKeyListener(playerControl);
-        gameObjects.add(player);
+        gameObjects.add(pop);
+        gameObjects.add(katch);
+        gameEvents.add(popE);
         gameEvents.add(playerE);
         
         
@@ -136,29 +140,55 @@ public class Game extends JPanel implements Runnable{
     
     @Override
     protected void paintComponent(Graphics g){
+        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
+        if(isRunning){
+            Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
+            gameBack.render(buffer);
         
-        for(int i = 0; i < gameObjects.size(); i++){
-            GameObject temp = gameObjects.get(i);
-            temp.render(buffer);
+            for(int i = 0; i < gameObjects.size(); i++){
+                GameObject temp = gameObjects.get(i);
+                temp.render(buffer);
+            }
+            BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
+                Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+            g2.drawImage(displayImage, null, 0, 0);
+            }else{
+                Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
+                gameBack.render(buffer);
+        
+                for(int i = 0; i < gameObjects.size(); i++){
+                    GameObject temp = gameObjects.get(i);
+                    temp.render(buffer);
+                }
+                BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
+                Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+                System.out.println("Game Over");
+                g2.drawImage(displayImage, null, 0, 0);
+                g2.setColor(Color.red);
+                g2.scale(5, 5);
+                g2.drawString(gameOver, Game.SCREEN_WIDTH/30, Game.SCREEN_HEIGHT/10);
         }
-        g2.drawImage(gameWorld, null, 0, 0);
         g2.dispose();
     }
-    
+        
     private void update(){
-        for(int i = 0; i<gameObjects.size(); i++){
+        for(int i = 0; i< gameObjects.size(); i++){
             GameObject temp = gameObjects.get(i);
             GameEvents tempE = gameEvents.get(i);
             
-            tempE.addObserver(temp);
-            tempE.setChanged();
-            tempE.notifyObservers();
+            if(!temp.getState()){
+               gameObjects.remove(temp);
+               gameEvents.remove(tempE);
+            }else{
+                tempE.addObserver(temp);
+                tempE.setChanged();
+                tempE.notifyObservers();
+            } 
         }
     }
-    
+        
     public static void main(String [] args){
         Game glt = new Game();
         Thread me = new Thread(glt);
