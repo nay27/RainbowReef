@@ -129,7 +129,7 @@ public class Game extends JPanel implements Runnable{
         for(int i = 0; i < TiledMap.NUM_ROWS; i++){
             for(int j = 0; j < TiledMap.NUM_COLS; j++){
                 char fileValue = level1.getTile(i, j);
-                System.out.println(fileValue);
+                //System.out.println(fileValue);
                 switch(fileValue){
                     case 'k':
                         katch = new Player(x, 600, "Katch", this);
@@ -248,10 +248,20 @@ public class Game extends JPanel implements Runnable{
             } 
         }
     }
+    
+    public int getObjectListSize(){
+        return gameObjects.size();
+    }
         
+    public GameObject getObject(int i){
+        return gameObjects.get(i);
+    }
     public static void main(String [] args){
         Game glt = new Game();
         Thread me = new Thread(glt);
         me.start();
     }
+
+  
+    
 }

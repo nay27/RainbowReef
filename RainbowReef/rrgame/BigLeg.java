@@ -28,7 +28,7 @@ public class BigLeg extends GameObject{
 
     @Override
     public void update(Observable obv, Object o) {
-        checkCollision(new Rectangle());
+        checkCollision();
         checkHealth();
     }
     public void checkHealth(){
@@ -37,7 +37,7 @@ public class BigLeg extends GameObject{
     }
     
     @Override
-    public boolean checkCollision(Rectangle rec) {
+    public boolean checkCollision() {
         return false;
     }
 

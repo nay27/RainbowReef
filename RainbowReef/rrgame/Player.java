@@ -61,7 +61,7 @@ public class Player extends GameObject implements Observer {
         }
         //The newly created Rectangle is just a filler argument - real arg can
         //Be filled in later
-        checkCollision(new Rectangle());
+        checkCollision();
     }
     
     private void moveRight(){
@@ -77,7 +77,7 @@ public class Player extends GameObject implements Observer {
     }
 
     @Override
-    public boolean checkCollision(Rectangle hitBox) {
+    public boolean checkCollision() {
         //throw new UnsupportedOperationException("Not supported yet.");
         return false;
     }

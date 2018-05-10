@@ -20,6 +20,7 @@ public class Pop extends GameObject{
     private double angle;
     private final double Y_VEL;
     private final int SPAWN_Y;
+    boolean collide = false;
     
     Pop(int x, int y, String img, Game game){
         
@@ -37,7 +38,7 @@ public class Pop extends GameObject{
     @Override
     public void update(Observable obv, Object o) {
         move();
-        checkCollision(new Rectangle());
+        checkCollision();
         checkLives();
     }
     
@@ -51,9 +52,19 @@ public class Pop extends GameObject{
       
     }
     
-    @Override
-    public boolean checkCollision(Rectangle rec) {
-        return false;
+    public boolean checkCollision() {
+        int size = game.getObjectListSize();
+        
+        for(int i =0; i< size; i++){
+            GameObject temp = game.getObject(i);
+            if(this.hitBox.intersects(temp.hitBox)){
+                collide = true;
+                if(temp instanceof Bricks){
+                    ((Bricks) temp).state = false;
+                }
+            }
+        }
+        return collide;
     }
     
     private void checkLives(){

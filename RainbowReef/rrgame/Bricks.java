@@ -47,8 +47,8 @@ public class Bricks extends GameObject {
          
     }
 
-    public boolean checkCollision(Rectangle rec) {
-        return this.hitBox.intersects(rec);
+    public boolean checkCollision() {
+        return false;
          //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -59,5 +59,6 @@ public class Bricks extends GameObject {
             g2.drawImage(sprite, x, y, null);
         }
     }
-    
+
+  
 }

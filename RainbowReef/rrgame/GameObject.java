@@ -84,7 +84,7 @@ import javax.imageio.ImageIO;
     
     @Override
     public abstract void update(Observable obv, Object o);
-    public abstract boolean checkCollision(Rectangle rec);
+    public abstract boolean checkCollision();
     public abstract void render(Graphics g);
     
     final void setX(int a){
