@@ -30,6 +30,7 @@ public class Game extends JPanel implements Runnable{
     private final String gameOver = "Game Over, You Lose";
     public static final int SCREEN_WIDTH = 960;
     public static final int SCREEN_HEIGHT = 720;
+    private int numBigLegs;
     private BufferedImage gameWorld;
     private Background gameBack;
     private Pop pop;
@@ -121,6 +122,7 @@ public class Game extends JPanel implements Runnable{
     }
     
     private void init(){
+        numBigLegs = 0;
         level1 = new TiledMap("rrresources/level1.txt");
         int y = 0;
         int x = 0;
@@ -130,15 +132,27 @@ public class Game extends JPanel implements Runnable{
                 System.out.println(fileValue);
                 switch(fileValue){
                     case 'k':
-                        katch = new Player(SCREEN_WIDTH/2, 600, "Katch", this);
+                        katch = new Player(x, 600, "Katch", this);
                         GameEvents playerE = new GameEvents();
-                        playerE.addObserver(katch);
                         Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
                         this.addKeyListener(playerControl);
                         gameObjects.add(katch);
                         gameEvents.add(playerE);
                         break;
-                        
+                    case 'p':
+                        pop = new Pop(x, y, "Pop", this);
+                        GameEvents popE = new GameEvents();
+                        gameObjects.add(pop);
+                        gameEvents.add(popE);
+                        break;
+                    case 'b':
+                        BigLeg bigLeg = new BigLeg(x, y, "BigLeg", 
+                                this, numBigLegs);
+                        GameEvents blE = new GameEvents();
+                        gameObjects.add(bigLeg);
+                        gameEvents.add(blE);
+                        numBigLegs++;
+                        break;
                     case '1':
                         Bricks brick1 = new Bricks(x, y, "Block_solid", this);
                         GameEvents brickEvent1 = new GameEvents();
@@ -181,13 +195,7 @@ public class Game extends JPanel implements Runnable{
         Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
         this.addKeyListener(playerControl);
         gameObjects.add(katch);
-        gameEvents.add(popE);*/
-        pop = new Pop(SCREEN_WIDTH/2, 250, "Pop", this);
-        GameEvents popE = new GameEvents();
-        gameObjects.add(pop);
-        gameEvents.add(popE);
-        
-        
+        gameEvents.add(popE);*/     
     }
     
     @Override
