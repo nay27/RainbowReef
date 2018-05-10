@@ -15,14 +15,26 @@ public class Player extends GameObject implements Observer {
     //Key tracking, player can only move horizontally
     private boolean rightPressed;
     private boolean leftPressed;
-    private final int SPEED;
+    private final double SPEED;
+    private double xPoint; 
+    private final double yPoint;
+    public static final double MAX_X = 960 - 40;
+    public static final double MIN_X = 0 + 40;
     
-    Player(int x, int y, String img){
-        super(x,y,img);
-        this.SPEED = 1;
+    Player(int x, int y, String img, Game game){
+        super(x, y, img, game);
+        xPoint = (double) x;
+        yPoint = (double) y;
+        SPEED = .025;
         
     }
     //Getters, setters, and togglers
+    public boolean isLeftPressed() {
+        return leftPressed;
+    }
+    public boolean isRightPressed(){
+        return rightPressed;
+    }
     public void toggleRightPressed() {
         this.rightPressed = true; 
     }
@@ -53,12 +65,14 @@ public class Player extends GameObject implements Observer {
     }
     
     private void moveRight(){
-        x += SPEED;
+        xPoint += SPEED;
+        x = (int) xPoint;
         checkBorder();
     }
     
     private void moveLeft(){
-        x -= SPEED;
+        xPoint -= SPEED;
+        x = (int) xPoint;
         checkBorder();
     }
 
@@ -67,6 +81,23 @@ public class Player extends GameObject implements Observer {
         //throw new UnsupportedOperationException("Not supported yet.");
         return false;
     }
+    
+    @Override
+    public void checkBorder(){
+            if(x + getWidth() >= Player.MAX_X){
+                x = (int) Player.MAX_X - getWidth();
+            }
+            else if(x < Player.MIN_X){
+                x = (int) Player.MIN_X;
+            }
+        
+            if(y + getHeight() >= Game.SCREEN_HEIGHT){
+                y = Game.SCREEN_HEIGHT - getHeight();
+            }
+            else if(y <= 0){
+                y = 0;
+            }
+        }
     //Equality and identification methods
     
     @Override
@@ -84,12 +115,20 @@ public class Player extends GameObject implements Observer {
         Graphics2D g2 = (Graphics2D) g;
         if(state){
             g2.drawImage(sprite, null, x, y);
-            System.out.println(toString());
+            //System.out.println(toString());
         }
     }
     //toString for debugging
     @Override
     public String toString(){
         return " x1 is " + x + " x2 is " + (x + getWidth());
+    }
+
+    public double getxPoint() {
+        return xPoint;
+    }
+
+    public void setxPoint(double xPoint) {
+        this.xPoint = xPoint;
     }
 }

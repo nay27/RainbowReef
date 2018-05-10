@@ -25,8 +25,9 @@ import javax.imageio.ImageIO;
     int width, height;
     boolean state;
     BufferedImage sprite;
-    private static HashMap<String, BufferedImage> spritesMap;
     Rectangle hitBox;
+    Game game;
+    private static HashMap<String, BufferedImage> spritesMap;
     
     static{
         spritesMap = new HashMap<>();
@@ -65,13 +66,14 @@ import javax.imageio.ImageIO;
         }
     }
        
-    GameObject(int x, int y, String img){
+    GameObject(int x, int y, String img, Game currentGame){
         this.x = x;
         this.y = y;
         this.sprite = GameObject.getSprite(img);
         this.width = sprite.getWidth();
         this.height = sprite.getHeight();
         state = true;
+        game = currentGame;
         this.hitBox = new Rectangle(x,y, this.width, this.height);
     }
     

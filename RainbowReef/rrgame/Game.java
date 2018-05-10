@@ -34,6 +34,7 @@ public class Game extends JPanel implements Runnable{
     private Background gameBack;
     private Pop pop;
     private Player katch;
+    private TiledMap level1, level2, level3;
     private ArrayList<GameObject> gameObjects;
     private ArrayList<GameEvents> gameEvents;
     
@@ -85,8 +86,6 @@ public class Game extends JPanel implements Runnable{
             if (now - lastUpdateTime > TIME_BTWN_UPDATES) {
                 lastUpdateTime = now - TIME_BTWN_UPDATES;
             }
-            
-            int tempnow = (int) (now/1000000000.0);
              
             this.repaint();
             this.setFocusable(isRunning);
@@ -122,18 +121,71 @@ public class Game extends JPanel implements Runnable{
     }
     
     private void init(){
-        katch = new Player(SCREEN_WIDTH/2,500,"Katch");
-        pop = new Pop(SCREEN_WIDTH/2, 250, "Pop");
-        GameEvents playerE = new GameEvents();
-        GameEvents popE = new GameEvents();
-        playerE.addObserver(katch);
+        level1 = new TiledMap("rrresources/level1.txt");
+        int y = 0;
+        int x = 0;
+        for(int i = 0; i < TiledMap.NUM_ROWS; i++){
+            for(int j = 0; j < TiledMap.NUM_COLS; j++){
+                char fileValue = level1.getTile(i, j);
+                System.out.println(fileValue);
+                switch(fileValue){
+                    case 'k':
+                        katch = new Player(SCREEN_WIDTH/2, 600, "Katch", this);
+                        GameEvents playerE = new GameEvents();
+                        playerE.addObserver(katch);
+                        Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
+                        this.addKeyListener(playerControl);
+                        gameObjects.add(katch);
+                        gameEvents.add(playerE);
+                        break;
+                        
+                    case '1':
+                        Bricks brick1 = new Bricks(x, y, "Block_solid", this);
+                        GameEvents brickEvent1 = new GameEvents();
+                        gameObjects.add(brick1);
+                        gameEvents.add(brickEvent1);
+                        break;
+                    case '2':
+                        Bricks brick2 = new Bricks(x, y, "Block1", this);
+                        GameEvents brickEvent2 = new GameEvents();
+                        gameObjects.add(brick2);
+                        gameEvents.add(brickEvent2);
+                        break;
+                    case '3':
+                        Bricks brick3 = new Bricks(x, y, "Block2", this);
+                        GameEvents brickEvent3 = new GameEvents();
+                        gameObjects.add(brick3);
+                        gameEvents.add(brickEvent3);
+                        break;
+                    case '9':
+                        Bricks brickLife = new Bricks(x, y, "Block_life", this);
+                        GameEvents brickEventLife = new GameEvents();
+                        gameObjects.add(brickLife);
+                        gameEvents.add(brickEventLife);
+                        break;
+                    case '?':
+                        Bricks brickBonus = new Bricks(x, y, "Block_split", this);
+                        GameEvents brickEventBonus = new GameEvents();
+                        gameObjects.add(brickBonus);
+                        gameEvents.add(brickEventBonus);
+                    default:
+                        break;
+                }
+                x += 40;
+            }
+            x = 0;
+            y += 20;
+        }
+        /*katch = new Player(SCREEN_WIDTH/2, 500, "Katch", this);
         popE.addObserver(pop);
         Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
         this.addKeyListener(playerControl);
-        gameObjects.add(pop);
         gameObjects.add(katch);
+        gameEvents.add(popE);*/
+        pop = new Pop(SCREEN_WIDTH/2, 250, "Pop", this);
+        GameEvents popE = new GameEvents();
+        gameObjects.add(pop);
         gameEvents.add(popE);
-        gameEvents.add(playerE);
         
         
     }

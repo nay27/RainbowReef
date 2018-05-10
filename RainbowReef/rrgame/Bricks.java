@@ -6,6 +6,7 @@
 package RainbowReef.rrgame;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Observable;
@@ -18,8 +19,8 @@ public class Bricks extends GameObject {
     
     int id;
     
-    Bricks(int x, int y, String img){
-        super(x,y,img);
+    Bricks(int x, int y, String img, Game game){
+        super(x,y,img,game);
         
         switch (img){
             case "Block1": this.id = 1;
@@ -43,7 +44,7 @@ public class Bricks extends GameObject {
 
     @Override
     public void update(Observable obv, Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         
     }
 
     public boolean checkCollision(Rectangle rec) {
@@ -53,7 +54,10 @@ public class Bricks extends GameObject {
 
     @Override
     public void render(Graphics g) {
-        
+        Graphics2D g2 = (Graphics2D) g;
+        if(state){
+            g2.drawImage(sprite, x, y, null);
+        }
     }
     
 }

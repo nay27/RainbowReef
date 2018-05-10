@@ -21,9 +21,9 @@ public class Pop extends GameObject{
     private final double Y_VEL;
     private final int SPAWN_Y;
     
-    Pop(int x, int y, String img){
+    Pop(int x, int y, String img, Game game){
         
-        super(x, y, img);
+        super(x, y, img, game);
         Y_VEL = -9.81;
         angle = 0;
         SPAWN_Y = y;
