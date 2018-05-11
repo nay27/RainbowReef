@@ -18,8 +18,6 @@ public class Player extends GameObject implements Observer {
     private final double SPEED;
     private double xPoint; 
     private final double yPoint;
-    public static final double MAX_X = 960 - 40;
-    public static final double MIN_X = 0 + 40;
     
     Player(int x, int y, String img, Game game){
         super(x, y, img, game);
@@ -61,6 +59,7 @@ public class Player extends GameObject implements Observer {
         }
         //The newly created Rectangle is just a filler argument - real arg can
         //Be filled in later
+        this.getHitBox().setLocation(x, y);
         checkCollision();
     }
     
@@ -77,18 +76,16 @@ public class Player extends GameObject implements Observer {
     }
 
     @Override
-    public boolean checkCollision() {
-        //throw new UnsupportedOperationException("Not supported yet.");
-        return false;
+    public void checkCollision() {
     }
     
     @Override
     public void checkBorder(){
-            if(x + getWidth() >= Player.MAX_X){
-                x = (int) Player.MAX_X - getWidth();
+            if(x + getWidth() >= Game.MAX_X){
+                x = (int) Game.MAX_X - getWidth();
             }
-            else if(x < Player.MIN_X){
-                x = (int) Player.MIN_X;
+            else if(x < Game.MIN_X){
+                x = (int) Game.MIN_X;
             }
         
             if(y + getHeight() >= Game.SCREEN_HEIGHT){

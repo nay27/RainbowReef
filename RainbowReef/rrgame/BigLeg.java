@@ -37,8 +37,7 @@ public class BigLeg extends GameObject{
     }
     
     @Override
-    public boolean checkCollision() {
-        return false;
+    public void checkCollision() {
     }
 
     @Override

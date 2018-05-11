@@ -21,12 +21,13 @@ import javax.imageio.ImageIO;
  */
  public abstract class GameObject implements Observer{
     
-    int x, y;
-    int width, height;
-    boolean state;
-    BufferedImage sprite;
-    Rectangle hitBox;
-    Game game;
+    protected int x, y;
+    protected int width, height;
+    protected boolean state;
+    protected boolean breakable;
+    protected BufferedImage sprite;
+    protected Rectangle hitBox;
+    protected Game game;
     private static HashMap<String, BufferedImage> spritesMap;
     
     static{
@@ -73,6 +74,7 @@ import javax.imageio.ImageIO;
         this.width = sprite.getWidth();
         this.height = sprite.getHeight();
         state = true;
+        breakable = false;
         game = currentGame;
         this.hitBox = new Rectangle(x,y, this.width, this.height);
     }
@@ -84,7 +86,7 @@ import javax.imageio.ImageIO;
     
     @Override
     public abstract void update(Observable obv, Object o);
-    public abstract boolean checkCollision();
+    public abstract void checkCollision();
     public abstract void render(Graphics g);
     
     final void setX(int a){
@@ -134,8 +136,24 @@ import javax.imageio.ImageIO;
     final boolean getState(){
         return state;
     }
-    final Rectangle getHitBox(){
+    final Rectangle getBounds(){
+        return hitBox.getBounds();
+    }
+    
+    public Rectangle getHitBox() {
         return hitBox;
+    }
+
+    public void setHitBox(Rectangle hitBox) {
+        this.hitBox = hitBox;
+    }
+    
+    public boolean isBreakable() {
+        return breakable;
+    }
+
+    public void setBreakable(boolean breakable) {
+        this.breakable = breakable;
     }
     
     void checkBorder(){

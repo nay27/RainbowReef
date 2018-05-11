@@ -18,16 +18,20 @@ public class Pop extends GameObject{
     
     private int lives;
     private double angle;
-    private final double Y_VEL;
+    private double yVel;
+    private double xVel;
     private final int SPAWN_Y;
+    private final int SPAWN_X;
     boolean collide = false;
     
     Pop(int x, int y, String img, Game game){
         
         super(x, y, img, game);
-        Y_VEL = -9.81;
+        yVel = 9.81;
+        xVel = 0;
         angle = 0;
         SPAWN_Y = y;
+        SPAWN_X = x;
         lives = 3;
     }
     
@@ -43,28 +47,53 @@ public class Pop extends GameObject{
     }
     
     private void move(){
-        if(checkCollision(new Rectangle())){
-            
-        }else{
-            y -= Y_VEL;
-            checkBorder();
-        }
-      
+        y += yVel;
+        x += xVel;
+        this.getHitBox().setLocation(x, y);
+        checkBorder();
     }
     
-    public boolean checkCollision() {
+    @Override
+    public void checkCollision() {
         int size = game.getObjectListSize();
         
         for(int i =0; i< size; i++){
             GameObject temp = game.getObject(i);
-            if(this.hitBox.intersects(temp.hitBox)){
-                collide = true;
-                if(temp instanceof Bricks){
-                    ((Bricks) temp).state = false;
+            if(this.getBounds().intersects(temp.getBounds())){
+                if(temp instanceof Player){
+                    if(this.getY() > temp.getY()){
+                        break;
+                    }
+                    if(this.getX() < (temp.getX() + temp.getWidth()) / 2){
+                        this.setxVel(-2);
+                    }
+                    else if(this.getX() > (temp.getX() + temp.getWidth()) / 2){
+                        this.setxVel(2);
+                    }
+                    this.setyVel(-yVel);
+                }
+                else if(temp instanceof Bricks){
+                    Rectangle intersectionP = 
+                            this.getBounds().intersection(temp.getBounds());
+                    if(intersectionP.width >= intersectionP.height)
+                        this.setyVel(-yVel);
+                    if(intersectionP.height >= intersectionP.width)
+                        this.setxVel(-xVel);
+                    if(temp.isBreakable())
+                        temp.setState(false);
+                }
+                else if(temp instanceof BigLeg){
+                    Rectangle intersectionP = 
+                            this.getBounds().intersection(temp.getBounds());
+                    if(intersectionP.width >= intersectionP.height)
+                        this.setyVel(-yVel);
+                    if(intersectionP.height >= intersectionP.width)
+                        this.setxVel(-xVel);
+                    temp.setState(false);
+                    game.decrementBigLeg();
                 }
             }
         }
-        return collide;
     }
     
     private void checkLives(){
@@ -75,19 +104,22 @@ public class Pop extends GameObject{
     
     @Override
     void checkBorder(){
-        if(x + getWidth() >= Game.SCREEN_WIDTH){
-            x = Game.SCREEN_WIDTH - getWidth();
+        if(x + getWidth() >= Game.MAX_X){
+            x = (int)Game.MAX_X - getWidth();
         }
-        else if(x <= 0){
-            x = 0;
+        else if(x <= Game.MIN_X){
+            x = (int)Game.MIN_X;
         }
         
         if(y >= Game.SCREEN_HEIGHT){
             y = SPAWN_Y;
+            x = SPAWN_X;
+            this.setxVel(0);
             //--lives;
         }
-        else if(y <= 0){
-            y = 0;
+        else if(y <= Game.MIN_Y){
+            y = (int) Game.MIN_Y;
+            this.setyVel(-yVel);
         }
     }
     
@@ -104,5 +136,29 @@ public class Pop extends GameObject{
     public String toString(){
         return "y is " + y + " angle is " + angle +
                 " lives left " + lives;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public double getyVel() {
+        return yVel;
+    }
+
+    public void setyVel(double yVel) {
+        this.yVel = yVel;
+    }
+
+    public double getxVel() {
+        return xVel;
+    }
+
+    public void setxVel(double xVel) {
+        this.xVel = xVel;
     }
 }

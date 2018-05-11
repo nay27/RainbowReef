@@ -30,6 +30,9 @@ public class Game extends JPanel implements Runnable{
     private final String gameOver = "Game Over, You Lose";
     public static final int SCREEN_WIDTH = 960;
     public static final int SCREEN_HEIGHT = 720;
+    public static final double MAX_X = 960 - 40;
+    public static final double MIN_X = 0 + 40;
+    public static final double MIN_Y = 0 + 40;
     private int numBigLegs;
     private BufferedImage gameWorld;
     private Background gameBack;
@@ -256,12 +259,30 @@ public class Game extends JPanel implements Runnable{
     public GameObject getObject(int i){
         return gameObjects.get(i);
     }
+
+    public Pop getPop() {
+        return pop;
+    }
+
+    public void setPop(Pop pop) {
+        this.pop = pop;
+    }
+
+    public Player getKatch() {
+        return katch;
+    }
+
+    public void setKatch(Player katch) {
+        this.katch = katch;
+    }
+    
+    public void decrementBigLeg(){
+        numBigLegs--;
+    }
+    
     public static void main(String [] args){
         Game glt = new Game();
         Thread me = new Thread(glt);
         me.start();
-    }
-
-  
-    
+    }   
 }

@@ -23,21 +23,42 @@ public class Bricks extends GameObject {
         super(x,y,img,game);
         
         switch (img){
-            case "Block1": this.id = 1;
-                    break;
-            case "Block2": this.id = 2;
-                    break;
-            case "Block3": this.id = 3;
-                    break;
-            case "Block4": this.id = 4;
-                    break;
-            case "Block5": this.id = 5;
-                    break;
-            case "Block6": this.id = 6;
-                    break;
-            case "Block7": this.id = 7;
-                    break;
-            
+            case "Block1": 
+                this.id = 1;
+                breakable = true;
+                break;
+            case "Block2": 
+                this.id = 2;
+                breakable = true;
+                break;
+            case "Block3": 
+                this.id = 3;
+                breakable = true;
+                break;
+            case "Block4": 
+                this.id = 4;
+                breakable = true;
+                break;
+            case "Block5": 
+                this.id = 5;
+                breakable = true;
+                break;
+            case "Block6": 
+                this.id = 6;
+                breakable = true;
+                break;
+            case "Block7": 
+                this.id = 7;
+                breakable = true;
+                break;  
+            case "Block_life":
+                this.id = 8;
+                breakable = true;
+                break;
+            case "Block_split":
+                this.id = 9;
+                breakable = true;
+                break;
         }
         
     }
@@ -47,8 +68,7 @@ public class Bricks extends GameObject {
          
     }
 
-    public boolean checkCollision() {
-        return false;
+    public void checkCollision() {
          //To change body of generated methods, choose Tools | Templates.
     }
 
