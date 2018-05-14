@@ -9,6 +9,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +28,7 @@ public class Pop extends GameObject{
     private final int START_SPEED = 10;
     boolean collide = false;
     private final double speed = 1;
+    boolean isDouble = false;
     
     Pop(int x, int y, String img, Game game){
         
@@ -118,9 +121,31 @@ public class Pop extends GameObject{
                         this.setyVel(-yVel);
                     if(intersectionP.height >= intersectionP.width)
                         this.setxVel(-xVel);
-                    if(temp.isBreakable())
+                    if(temp.isBreakable()){
                         temp.setState(false);
-                    
+                        if(((Bricks) temp).powerup){
+                            double tempt =  System.currentTimeMillis();
+                            double limit = tempt + 5000;
+                                Pop temppop = new Pop(this.x, this.y, "Pop", game);
+                                temppop.isDouble = true;
+                                 GameEvents temppopE = new GameEvents();
+                            Game.gameObjects.add(temppop);
+                            Game.gameEvents.add(temppopE);
+                            if(Game.lastUpdateTime > limit){
+                                temppop.setState(false);
+                            }
+                            
+                        } else if (((Bricks) temp).heal){
+                            System.out.println("Testing lives: " + lives);
+                            this.lives ++;
+                            
+                            System.out.println("Testing lives: " + lives);
+                            
+                        } else{
+                            ((Bricks) temp).game.updateScore(((Bricks) temp).id * 5);
+                        }
+                    }
+                    System.out.println("Score: " + game.getScore());
                     break;
                 }
                 else if(temp instanceof BigLeg){
@@ -131,8 +156,16 @@ public class Pop extends GameObject{
                         this.setyVel(-yVel);
                     if(intersectionP.height >= intersectionP.width)
                         this.setxVel(-xVel);
+                    
                     temp.setState(false);
+                    game.updateScore(50);
                     game.decrementBigLeg();
+                    
+                    if(game.getNumBigLegs() == 0){
+                        System.out.println("You win!");
+                        
+                        System.out.println("Score: " + game.getScore());
+                    }
                     
                     break;
                 }

@@ -39,8 +39,10 @@ public class Game extends JPanel implements Runnable{
     private Pop pop;
     private Player katch;
     private TiledMap level1, level2, level3;
-    private ArrayList<GameObject> gameObjects;
-    private ArrayList<GameEvents> gameEvents;
+    public static ArrayList<GameObject> gameObjects;
+    public static ArrayList<GameEvents> gameEvents;
+    private static int score = 0;
+    static double lastUpdateTime;
     
     //Constructor
     Game(){
@@ -66,7 +68,7 @@ public class Game extends JPanel implements Runnable{
 
         final int MAX_UPDATES_TO_RENDER = 1;
 
-        double lastUpdateTime = System.nanoTime();
+        lastUpdateTime = System.nanoTime();
 
         double lastRenderTime = System.nanoTime();
 
@@ -279,6 +281,21 @@ public class Game extends JPanel implements Runnable{
     public void decrementBigLeg(){
         numBigLegs--;
     }
+    public int getNumBigLegs(){
+        return numBigLegs;
+    }
+    
+    public int getScore(){
+        return score;
+    }
+    public void updateScore(int x){
+        score = score + x;
+    }
+    
+    public void resetScore(){
+        score = 0;
+    }
+    
     
     public static void main(String [] args){
         Game glt = new Game();

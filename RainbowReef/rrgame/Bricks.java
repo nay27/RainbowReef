@@ -18,6 +18,7 @@ import java.util.Observable;
 public class Bricks extends GameObject {
     
     int id;
+    boolean powerup = false, heal = false;
     
     Bricks(int x, int y, String img, Game game){
         super(x,y,img,game);
@@ -54,10 +55,12 @@ public class Bricks extends GameObject {
             case "Block_life":
                 this.id = 8;
                 breakable = true;
+                heal = true;
                 break;
             case "Block_split":
                 this.id = 9;
                 breakable = true;
+                powerup = true;
                 break;
         }
         
