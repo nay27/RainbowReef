@@ -72,11 +72,11 @@ public class Pop extends GameObject{
                       yVel = yVel + speed;
                           }
                           System.out.println("Testing yVel: " + this.yVel);
-                     int zone1 = temp.getX() + 14;
-                        int zone2 = zone1 + 15;
-                        int zone3 = zone2 + 22;
-                        int zone4 = zone3 + 15;
-                        int zone5 = zone4 + 14;
+                     int zone1 = temp.getX() + 15;
+                        int zone2 = zone1 + 16;
+                        int zone3 = zone2 + 18;
+                        int zone4 = zone3 + 16;
+                        int zone5 = zone4 + 15;
                         
                         //System.out.println("testing center: " + center);
                 
@@ -85,11 +85,11 @@ public class Pop extends GameObject{
                         break;
                     }
                     if(this.getX()< zone1){
-                        this.setxVel(-2);
+                        this.setxVel(-3);
                         System.out.println("testing zone 1");
                     }
                     else if(this.getX() > zone1 && this.getX()< zone2){
-                        this.setxVel(-1);
+                        this.setxVel(-2);
                         
                         System.out.println("testing zone 2");
                         
@@ -99,12 +99,12 @@ public class Pop extends GameObject{
                         System.out.println("testing zone 3");
                     }
                       else if(this.getX() > zone3 && this.getX()< zone4){
-                        this.setxVel(1);
+                        this.setxVel(2);
                         
                         System.out.println("testing zone 4");
                     }
                       else if(this.getX() > zone4 && this.getX()< zone5){
-                        this.setxVel(2);
+                        this.setxVel(3);
                         
                         System.out.println("testing zone 5");
                     }
@@ -120,6 +120,8 @@ public class Pop extends GameObject{
                         this.setxVel(-xVel);
                     if(temp.isBreakable())
                         temp.setState(false);
+                    
+                    break;
                 }
                 else if(temp instanceof BigLeg){
                     
@@ -131,6 +133,8 @@ public class Pop extends GameObject{
                         this.setxVel(-xVel);
                     temp.setState(false);
                     game.decrementBigLeg();
+                    
+                    break;
                 }
             }
         }
