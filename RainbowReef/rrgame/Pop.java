@@ -22,12 +22,15 @@ public class Pop extends GameObject{
     private double xVel;
     private final int SPAWN_Y;
     private final int SPAWN_X;
+    private final int MAX_SPEED = 20;
+    private final int START_SPEED = 10;
     boolean collide = false;
+    private final double speed = 1;
     
     Pop(int x, int y, String img, Game game){
         
         super(x, y, img, game);
-        yVel = 9.81;
+        yVel = START_SPEED;
         xVel = 0;
         angle = 0;
         SPAWN_Y = y;
@@ -42,13 +45,15 @@ public class Pop extends GameObject{
     @Override
     public void update(Observable obv, Object o) {
         move();
-        checkCollision();
         checkLives();
     }
     
     private void move(){
+        
+        checkCollision();
         y += yVel;
         x += xVel;
+        
         this.getHitBox().setLocation(x, y);
         checkBorder();
     }
@@ -60,19 +65,53 @@ public class Pop extends GameObject{
         for(int i =0; i< size; i++){
             GameObject temp = game.getObject(i);
             if(this.getBounds().intersects(temp.getBounds())){
+                 
                 if(temp instanceof Player){
+                    
+                          if(yVel < MAX_SPEED){
+                      yVel = yVel + speed;
+                          }
+                          System.out.println("Testing yVel: " + this.yVel);
+                     int zone1 = temp.getX() + 14;
+                        int zone2 = zone1 + 15;
+                        int zone3 = zone2 + 22;
+                        int zone4 = zone3 + 15;
+                        int zone5 = zone4 + 14;
+                        
+                        //System.out.println("testing center: " + center);
+                
+                        
                     if(this.getY() > temp.getY()){
                         break;
                     }
-                    if(this.getX() < (temp.getX() + temp.getWidth()) / 2){
+                    if(this.getX()< zone1){
                         this.setxVel(-2);
+                        System.out.println("testing zone 1");
                     }
-                    else if(this.getX() > (temp.getX() + temp.getWidth()) / 2){
+                    else if(this.getX() > zone1 && this.getX()< zone2){
+                        this.setxVel(-1);
+                        
+                        System.out.println("testing zone 2");
+                        
+                    }  else if(this.getX() > zone2 && this.getX()< zone3){
+                        this.setxVel(0);
+                        
+                        System.out.println("testing zone 3");
+                    }
+                      else if(this.getX() > zone3 && this.getX()< zone4){
+                        this.setxVel(1);
+                        
+                        System.out.println("testing zone 4");
+                    }
+                      else if(this.getX() > zone4 && this.getX()< zone5){
                         this.setxVel(2);
+                        
+                        System.out.println("testing zone 5");
                     }
                     this.setyVel(-yVel);
                 }
                 else if(temp instanceof Bricks){
+                    
                     Rectangle intersectionP = 
                             this.getBounds().intersection(temp.getBounds());
                     if(intersectionP.width >= intersectionP.height)
@@ -83,6 +122,7 @@ public class Pop extends GameObject{
                         temp.setState(false);
                 }
                 else if(temp instanceof BigLeg){
+                    
                     Rectangle intersectionP = 
                             this.getBounds().intersection(temp.getBounds());
                     if(intersectionP.width >= intersectionP.height)
@@ -115,6 +155,7 @@ public class Pop extends GameObject{
             y = SPAWN_Y;
             x = SPAWN_X;
             this.setxVel(0);
+            this.setyVel(START_SPEED);
             //--lives;
         }
         else if(y <= Game.MIN_Y){
@@ -128,7 +169,7 @@ public class Pop extends GameObject{
         Graphics2D g2 = (Graphics2D) g;
         if(state){
             g2.drawImage(sprite, null, x, y);
-            System.out.println(toString());
+            //System.out.println(toString());
         }
     }
     

@@ -77,6 +77,7 @@ import javax.imageio.ImageIO;
         breakable = false;
         game = currentGame;
         this.hitBox = new Rectangle(x,y, this.width, this.height);
+        
     }
     
   
