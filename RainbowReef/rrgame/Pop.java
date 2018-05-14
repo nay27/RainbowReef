@@ -136,16 +136,13 @@ public class Pop extends GameObject{
                             }
                             
                         } else if (((Bricks) temp).heal){
-                            System.out.println("Testing lives: " + lives);
                             this.lives ++;
                             
-                            System.out.println("Testing lives: " + lives);
                             
                         } else{
                             ((Bricks) temp).game.updateScore(((Bricks) temp).id * 5);
                         }
                     }
-                    System.out.println("Score: " + game.getScore());
                     break;
                 }
                 else if(temp instanceof BigLeg){
