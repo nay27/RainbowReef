@@ -24,10 +24,14 @@ import javax.swing.JPanel;
 public class Game extends JPanel implements Runnable{
     
     private boolean isRunning = false;
+    private boolean doublePoints = false;
     private int fps = 60;
     private int frameCount = 0;
+    private static int score = 0;
+    private int doublePointsTicks;
     private final double GAME_HERTZ = 30.0;
     private final String gameOver = "Game Over, You Lose";
+    private static String scoreString;
     public static final int SCREEN_WIDTH = 960;
     public static final int SCREEN_HEIGHT = 720;
     public static final double MAX_X = 960 - 40;
@@ -41,12 +45,12 @@ public class Game extends JPanel implements Runnable{
     private TiledMap level1, level2, level3;
     public static ArrayList<GameObject> gameObjects;
     public static ArrayList<GameEvents> gameEvents;
-    private static int score = 0;
     static double lastUpdateTime;
     
     //Constructor
     Game(){
         super();
+        scoreString = "Score: ";
         gameWorld = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
         gameBack = new Background();
@@ -137,7 +141,7 @@ public class Game extends JPanel implements Runnable{
                 //System.out.println(fileValue);
                 switch(fileValue){
                     case 'k':
-                        katch = new Player(x, 600, "Katch", this);
+                        katch = new Player(x, 625, "Katch", this);
                         GameEvents playerE = new GameEvents();
                         Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
                         this.addKeyListener(playerControl);
@@ -216,6 +220,11 @@ public class Game extends JPanel implements Runnable{
                 GameObject temp = gameObjects.get(i);
                 temp.render(buffer);
             }
+            buffer.scale(4, 4);
+            if(isDoublePoints())
+                buffer.drawString("Double Points!", 158, 170);
+            buffer.drawString(displayScore(), 10, 170);
+            buffer.scale(.25,.25);
             BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
                 Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
             g2.drawImage(displayImage, null, 0, 0);
@@ -288,12 +297,43 @@ public class Game extends JPanel implements Runnable{
     public int getScore(){
         return score;
     }
+
+    public boolean isDoublePoints() {
+        if(doublePoints == true){
+            if(checkCounter() == 0){
+                doublePoints = false;
+            }else{
+                decrementDPCounter();
+            }
+        }
+        return doublePoints;
+    }
+
+    public void setDoublePoints(boolean doublePoints) {
+        if(doublePoints == true){
+            doublePointsTicks = 300;
+        }
+        this.doublePoints = doublePoints;
+    }
+    private void decrementDPCounter(){
+        doublePointsTicks--;
+    }
+    private int checkCounter(){
+        return doublePointsTicks;
+    }
     public void updateScore(int x){
         score = score + x;
     }
     
     public void resetScore(){
         score = 0;
+    }
+    
+    private String displayScore(){
+        scoreString = "Score: ";
+        String stScore = Integer.toString(score);
+        String displayedString = scoreString + stScore;
+        return displayedString;
     }
     
     

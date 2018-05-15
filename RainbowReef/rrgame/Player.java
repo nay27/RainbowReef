@@ -110,13 +110,15 @@ public class Player extends GameObject implements Observer {
     @Override
     public void render(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        System.out.println(toString());
         if(state)
             g2.drawImage(sprite, null, x, y);
     }
     //toString for debugging
     @Override
     public String toString(){
-        return " x1 is " + x + " x2 is " + (x + getWidth());
+        return " x1 is " + x + " x2 is " + (x + getWidth())
+                + " y is: " + y;
     }
 
     public double getxPoint() {

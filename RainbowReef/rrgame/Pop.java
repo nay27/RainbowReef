@@ -54,10 +54,10 @@ public class Pop extends GameObject{
     private void move(){
         
         checkCollision();
+        this.getHitBox().setBounds(x, y, width, height);
         y += yVel;
         x += xVel;
-        
-        this.getHitBox().setLocation(x, y);
+        this.getHitBox().setBounds(x, y, width, height);
         checkBorder();
     }
     
@@ -68,73 +68,88 @@ public class Pop extends GameObject{
         for(int i =0; i< size; i++){
             GameObject temp = game.getObject(i);
             if(this.getBounds().intersects(temp.getBounds())){
-                 
-                if(temp instanceof Player){
-                    
-                          if(yVel < MAX_SPEED){
-                      yVel = yVel + speed;
-                          }
-                          System.out.println("Testing yVel: " + this.yVel);
-                     int zone1 = temp.getX() + 15;
-                        int zone2 = zone1 + 16;
-                        int zone3 = zone2 + 18;
-                        int zone4 = zone3 + 16;
-                        int zone5 = zone4 + 15;
-                        
-                        //System.out.println("testing center: " + center);
                 
-                        
+                if(temp instanceof Player){
+                  
                     if(this.getY() > temp.getY()){
+                        this.setyVel(yVel);
                         break;
+                    }else if(this.getX() == (temp.getX() / 2)){
+                        this.setxVel(0);
+                    }else if(this.getX() < temp.getWidth() / 2 + temp.getX()){
+                        this.setxVel(-1);
+                    }else if(this.getX() > temp.getWidth() / 2 + temp.getX()){
+                        this.setxVel(1);
                     }
-                    if(this.getX()< zone1){
+                    /*if(yVel < MAX_SPEED){
+                      yVel = yVel + speed;
+                    }*/
+                    /*System.out.println("Testing yVel: " + this.yVel);
+                    int zone1 = temp.getX() + 15;
+                    int zone2 = zone1 + 16;
+                    int zone3 = zone2 + 18;
+                    int zone4 = zone3 + 16;
+                    int zone5 = zone4 + 15;
+
+                    if(this.getX() < zone1){
                         this.setxVel(-3);
                         System.out.println("testing zone 1");
                     }
                     else if(this.getX() > zone1 && this.getX()< zone2){
-                        this.setxVel(-2);
-                        
-                        System.out.println("testing zone 2");
-                        
-                    }  else if(this.getX() > zone2 && this.getX()< zone3){
+                        this.setxVel(-2);        
+                        System.out.println("testing zone 2");                        
+                    }  
+                    else if(this.getX() > zone2 && this.getX()< zone3){
                         this.setxVel(0);
-                        
                         System.out.println("testing zone 3");
                     }
-                      else if(this.getX() > zone3 && this.getX()< zone4){
-                        this.setxVel(2);
-                        
+                    else if(this.getX() > zone3 && this.getX()< zone4){
+                        this.setxVel(2);        
                         System.out.println("testing zone 4");
                     }
-                      else if(this.getX() > zone4 && this.getX()< zone5){
-                        this.setxVel(3);
-                        
+                    else if(this.getX() > zone4 && this.getX()< zone5){
+                        this.setxVel(3);          
                         System.out.println("testing zone 5");
-                    }
+                    }*/
                     this.setyVel(-yVel);
-                }
+                    break;
+                }                
                 else if(temp instanceof Bricks){
                     
                     Rectangle intersectionP = 
                             this.getBounds().intersection(temp.getBounds());
-                    if(intersectionP.width >= intersectionP.height)
+                    
+                    if(intersectionP.width >= intersectionP.height){
                         this.setyVel(-yVel);
-                    if(intersectionP.height >= intersectionP.width)
+                    }else if(intersectionP.height >= intersectionP.width){
                         this.setxVel(-xVel);
+                    }
+                    
                     if(temp.isBreakable()){
                         temp.setState(false);
-                        if(((Bricks) temp).powerup){
+                        Bricks brick = (Bricks) temp;
+                        
+                        if(brick.getId() == 9){
+                            game.setDoublePoints(true);
+                        }
+                        if(game.isDoublePoints()){
+                            game.updateScore(brick.getScore() * 2);
+                        }else{
+                            game.updateScore(brick.getScore());
+                        }
+                    }
+                    break;
+                        /*if(((Bricks) temp).powerup){
                             double tempt =  System.currentTimeMillis();
                             double limit = tempt + 5000;
                                 Pop temppop = new Pop(this.x, this.y, "Pop", game);
                                 temppop.isDouble = true;
-                                 GameEvents temppopE = new GameEvents();
+                                GameEvents temppopE = new GameEvents();
                             Game.gameObjects.add(temppop);
                             Game.gameEvents.add(temppopE);
                             if(Game.lastUpdateTime > limit){
                                 temppop.setState(false);
-                            }
-                            
+                            }    
                         } else if (((Bricks) temp).heal){
                             this.lives ++;
                             
@@ -142,8 +157,7 @@ public class Pop extends GameObject{
                         } else{
                             ((Bricks) temp).game.updateScore(((Bricks) temp).id * 5);
                         }
-                    }
-                    break;
+                    }*/
                 }
                 else if(temp instanceof BigLeg){
                     
@@ -203,14 +217,13 @@ public class Pop extends GameObject{
         Graphics2D g2 = (Graphics2D) g;
         if(state){
             g2.drawImage(sprite, null, x, y);
-            //System.out.println(toString());
+            System.out.println(toString());
         }
     }
     
     @Override
     public String toString(){
-        return "y is " + y + " angle is " + angle +
-                " lives left " + lives;
+        return "y is " + y + " lives left " + lives;
     }
 
     public double getAngle() {
