@@ -78,16 +78,36 @@ public class Pop extends GameObject{
                     /*if(yVel < MAX_SPEED)
                         yVel = yVel + speed;
                     */
+                    int zone1 = temp.getX() + 15;
+                    int zone2 = zone1 + 16;
+                    int zone3 = zone2 + 18;
+                    int zone4 = zone3 + 16;
+                    int zone5 = zone4 + 15;
+                    
                     if(this.getY() >= 605){
                         this.setyVel(yVel);
                         break;
-                    }else if(this.getX() == (temp.getX() / 2)){
-                        this.setxVel(0);
-                    }else if(this.getX() < temp.getWidth() / 2 + temp.getX()){
-                        this.setxVel(-1);
-                    }else if(this.getX() > temp.getWidth() / 2 + temp.getX()){
-                        this.setxVel(1);
                     }
+                    if(this.getX() < zone1){
+                        this.setxVel(-3);
+                    }
+                    else if(this.getX() > zone1 && this.getX() < zone2)
+                    {
+                        this.setxVel(-2);
+                    }
+                    else if(this.getX() > zone2 && this.getX() < zone3)
+                    {
+                        this.setxVel(0);
+                    }
+                    else if(this.getX() > zone3 && this.getX() < zone4)
+                    {
+                        this.setxVel(2);
+                    }
+                    else if(this.getX() > zone4 && this.getX() < zone5)
+                    {
+                        this.setxVel(3);
+                    }
+                    
                     this.setyVel(-yVel);
                     break;
                 }else if(temp instanceof Bricks){
@@ -96,8 +116,23 @@ public class Pop extends GameObject{
                             this.getBounds().intersection(temp.getBounds());
                     
                     if(intersectionP.width >= intersectionP.height){
+                        
+                        int difference = intersectionP.width - 
+                                intersectionP.height;
+                        if((difference <= 4 || difference >= 8) 
+                                && difference != 0){
+                            this.setxVel(-xVel);
+                        }
                         this.setyVel(-yVel);
-                    }else if(intersectionP.height >= intersectionP.width){
+                    }
+                    if(intersectionP.height >= intersectionP.width){
+                        
+                        int difference = intersectionP.height - 
+                                intersectionP.width;
+                        if((difference <= 6 || difference > 8) && 
+                                difference != 0){
+                            this.setyVel(-yVel);
+                        }
                         this.setxVel(-xVel);
                     }
                     
@@ -203,7 +238,8 @@ public class Pop extends GameObject{
     
     @Override
     public String toString(){
-        return "y is " + y + " lives left " + lives;
+        return "y is " + y + " xVel is " + xVel +
+                " yVel is " + yVel;
     }
 
     public double getAngle() {

@@ -107,5 +107,10 @@ public class Bricks extends GameObject {
         if(state){
             g2.drawImage(sprite, x, y, null);
         }
-    } 
+    }
+    
+    @Override
+    public String toString(){
+        return this.getHitBox().toString();
+    }
 }
