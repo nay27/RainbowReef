@@ -78,7 +78,7 @@ public class Pop extends GameObject{
                     /*if(yVel < MAX_SPEED)
                         yVel = yVel + speed;
                     */
-                    if(this.getY() > temp.getY()){
+                    if(this.getY() >= 605){
                         this.setyVel(yVel);
                         break;
                     }else if(this.getX() == (temp.getX() / 2)){
