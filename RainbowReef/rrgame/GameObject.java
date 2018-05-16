@@ -46,7 +46,7 @@ import javax.imageio.ImageIO;
             BufferedImage blockSolid = ImageIO.read(new File("rrresources/Block_solid.gif"));
             BufferedImage blockSplit = ImageIO.read(new File("rrresources/Block_split.gif"));
             BufferedImage katch = ImageIO.read(new File("rrresources/Katch.gif"));
-            BufferedImage pop = ImageIO.read(new File("rrresources/Pop.gif"));
+                BufferedImage pop = ImageIO.read(new File("rrresources/pop.png"));
             spritesMap.put("BigLeg", bigleg);
             spritesMap.put("Block1", block1);
             spritesMap.put("Block2", block2);

@@ -214,21 +214,31 @@ public class Game extends JPanel implements Runnable{
         Graphics2D g2 = (Graphics2D) g;
         if(isRunning){
             Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
+            
+            //Render background to buffer
             gameBack.render(buffer);
-        
+            
+            //Render all game objects to buffer
             for(int i = 0; i < gameObjects.size(); i++){
                 GameObject temp = gameObjects.get(i);
                 temp.render(buffer);
             }
-            buffer.scale(4, 4);
+            
+            //Render score, double points if so, and pop lives to buffer
+            buffer.scale(3, 3);
             if(isDoublePoints())
-                buffer.drawString("Double Points!", 158, 170);
-            buffer.drawString(displayScore(), 10, 170);
-            buffer.scale(.25,.25);
+                buffer.drawString("Double Points!", 200, 229);
+            buffer.drawString(displayScore(), 15, 229);
+            buffer.scale(.33 + .01,.33 + .01);
+            renderPopLives(buffer);
+            
+            //Render buffer to the gameScreen
             BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
                 Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
             g2.drawImage(displayImage, null, 0, 0);
+            
             }else{
+                //This clause is entered if the game ends
                 Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
                 gameBack.render(buffer);
         
@@ -327,6 +337,21 @@ public class Game extends JPanel implements Runnable{
     
     public void resetScore(){
         score = 0;
+    }
+    
+    private void renderPopLives(Graphics g){
+        
+        Graphics2D g2 = (Graphics2D) g;
+        int x = Game.SCREEN_WIDTH / 2 - 50;
+        int y = 658;
+        
+        g2.scale(2,2);
+        g2.drawString("Lives: ", x / 2 - 40, y / 2 + 10);
+        g2.scale(.5,.5);
+        for(int i = 0; i < pop.getLives(); i++){
+            g2.drawImage(pop.getSprite(), x, y, null);
+            x += 30;
+        }
     }
     
     private String displayScore(){

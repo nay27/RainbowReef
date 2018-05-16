@@ -53,11 +53,10 @@ public class Pop extends GameObject{
     
     private void move(){
         
-        checkCollision();
-        this.getHitBox().setBounds(x, y, width, height);
         y += yVel;
         x += xVel;
         this.getHitBox().setBounds(x, y, width, height);
+        checkCollision();
         checkBorder();
     }
     
@@ -67,10 +66,18 @@ public class Pop extends GameObject{
         
         for(int i =0; i< size; i++){
             GameObject temp = game.getObject(i);
+            
+            if(temp instanceof Pop){
+                continue;
+            }
+            
             if(this.getBounds().intersects(temp.getBounds())){
                 
                 if(temp instanceof Player){
                   
+                    /*if(yVel < MAX_SPEED)
+                        yVel = yVel + speed;
+                    */
                     if(this.getY() > temp.getY()){
                         this.setyVel(yVel);
                         break;
@@ -81,40 +88,9 @@ public class Pop extends GameObject{
                     }else if(this.getX() > temp.getWidth() / 2 + temp.getX()){
                         this.setxVel(1);
                     }
-                    /*if(yVel < MAX_SPEED){
-                      yVel = yVel + speed;
-                    }*/
-                    /*System.out.println("Testing yVel: " + this.yVel);
-                    int zone1 = temp.getX() + 15;
-                    int zone2 = zone1 + 16;
-                    int zone3 = zone2 + 18;
-                    int zone4 = zone3 + 16;
-                    int zone5 = zone4 + 15;
-
-                    if(this.getX() < zone1){
-                        this.setxVel(-3);
-                        System.out.println("testing zone 1");
-                    }
-                    else if(this.getX() > zone1 && this.getX()< zone2){
-                        this.setxVel(-2);        
-                        System.out.println("testing zone 2");                        
-                    }  
-                    else if(this.getX() > zone2 && this.getX()< zone3){
-                        this.setxVel(0);
-                        System.out.println("testing zone 3");
-                    }
-                    else if(this.getX() > zone3 && this.getX()< zone4){
-                        this.setxVel(2);        
-                        System.out.println("testing zone 4");
-                    }
-                    else if(this.getX() > zone4 && this.getX()< zone5){
-                        this.setxVel(3);          
-                        System.out.println("testing zone 5");
-                    }*/
                     this.setyVel(-yVel);
                     break;
-                }                
-                else if(temp instanceof Bricks){
+                }else if(temp instanceof Bricks){
                     
                     Rectangle intersectionP = 
                             this.getBounds().intersection(temp.getBounds());
@@ -129,9 +105,14 @@ public class Pop extends GameObject{
                         temp.setState(false);
                         Bricks brick = (Bricks) temp;
                         
+                        //Check for special bricks
                         if(brick.getId() == 9){
                             game.setDoublePoints(true);
+                        }else if(brick.getId() == 8){
+                            this.lives += 1;
                         }
+                        
+                        //Check for double points, then assign points
                         if(game.isDoublePoints()){
                             game.updateScore(brick.getScore() * 2);
                         }else{
@@ -158,8 +139,7 @@ public class Pop extends GameObject{
                             ((Bricks) temp).game.updateScore(((Bricks) temp).id * 5);
                         }
                     }*/
-                }
-                else if(temp instanceof BigLeg){
+                }else if(temp instanceof BigLeg){
                     
                     Rectangle intersectionP = 
                             this.getBounds().intersection(temp.getBounds());

@@ -13,8 +13,8 @@ import java.util.Observer;
 public class Player extends GameObject implements Observer {
     
     //Key tracking, player can only move horizontally
-    private boolean rightPressed;
-    private boolean leftPressed;
+    private boolean rightPressed = false;
+    private boolean leftPressed = false;
     private final double SPEED;
     private double xPoint; 
     private final double yPoint;
@@ -53,8 +53,7 @@ public class Player extends GameObject implements Observer {
     public void update(Observable obv, Object o) {
         if(rightPressed){
             moveRight();
-        }
-        if(leftPressed){
+        }else if(leftPressed){
             moveLeft();
         }
         //The newly created Rectangle is just a filler argument - real arg can
