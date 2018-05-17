@@ -23,7 +23,7 @@ public class Player extends GameObject implements Observer {
         super(x, y, img, game);
         xPoint = (double) x;
         yPoint = (double) y;
-        SPEED = .02;
+        SPEED = .01;
         
     }
     //Getters, setters, and togglers
@@ -63,14 +63,14 @@ public class Player extends GameObject implements Observer {
     }
     
     private void moveRight(){
-        xPoint += SPEED;
-        x = (int) xPoint;
+        setxPoint(getxPoint() + SPEED);
+        setX((int) getxPoint());
         checkBorder();
     }
     
     private void moveLeft(){
-        xPoint -= SPEED;
-        x = (int) xPoint;
+        setxPoint(getxPoint() - SPEED);
+        setX((int) getxPoint());
         checkBorder();
     }
 
@@ -81,9 +81,11 @@ public class Player extends GameObject implements Observer {
     @Override
     public void checkBorder(){
             if(x + getWidth() >= Game.MAX_X){
+                setxPoint(Game.MAX_X - getWidth());
                 x = (int) Game.MAX_X - getWidth();
             }
             else if(x < Game.MIN_X){
+                setxPoint(Game.MIN_X);
                 x = (int) Game.MIN_X;
             }
         
@@ -117,7 +119,9 @@ public class Player extends GameObject implements Observer {
     @Override
     public String toString(){
         return " x1 is " + x + " x2 is " + (x + getWidth())
-                + " y is: " + y;
+                + "xPoint is: " + xPoint + " SPEED: "+ SPEED 
+                + " left pressed: " + leftPressed +
+                " right pressed: " + rightPressed;
     }
 
     public double getxPoint() {

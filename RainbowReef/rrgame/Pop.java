@@ -25,9 +25,8 @@ public class Pop extends GameObject{
     private final int SPAWN_Y;
     private final int SPAWN_X;
     private final int MAX_SPEED = 20;
-    private final int START_SPEED = 10;
+    private final int START_SPEED = 8;
     boolean collide = false;
-    private final double speed = 1;
     boolean isDouble = false;
     
     Pop(int x, int y, String img, Game game){
@@ -74,20 +73,30 @@ public class Pop extends GameObject{
             if(this.getBounds().intersects(temp.getBounds())){
                 
                 if(temp instanceof Player){
-                  
-                    /*if(yVel < MAX_SPEED)
-                        yVel = yVel + speed;
-                    */
-                    int zone1 = temp.getX() + 15;
-                    int zone2 = zone1 + 16;
-                    int zone3 = zone2 + 18;
-                    int zone4 = zone3 + 16;
-                    int zone5 = zone4 + 15;
                     
                     if(this.getY() >= 605){
                         this.setyVel(yVel);
                         break;
                     }
+
+                    if(getX() >= temp.getX() + (temp.getWidth() / 2) - 10 &&
+                            getX() <= temp.getX() + (temp.getWidth() / 2) + 10){
+                        setxVel(0);
+                    }
+                    else if(getX() < temp.getX() + (temp.getWidth() / 2 - 10))
+                    {
+                        setxVel(-3);
+                    }
+                    else if(getX() > temp.getX() + (temp.getWidth() / 2 + 10))
+                    {
+                        setxVel(3);
+                    }
+                    /*int zone1 = temp.getX() + 15;
+                    int zone2 = zone1 + 16;
+                    int zone3 = zone2 + 18;
+                    int zone4 = zone3 + 16;
+                    int zone5 = zone4 + 15;
+                    
                     if(this.getX() < zone1){
                         this.setxVel(-3);
                     }
@@ -106,7 +115,7 @@ public class Pop extends GameObject{
                     else if(this.getX() > zone4 && this.getX() < zone5)
                     {
                         this.setxVel(3);
-                    }
+                    }*/
                     
                     this.setyVel(-yVel);
                     break;
@@ -155,25 +164,6 @@ public class Pop extends GameObject{
                         }
                     }
                     break;
-                        /*if(((Bricks) temp).powerup){
-                            double tempt =  System.currentTimeMillis();
-                            double limit = tempt + 5000;
-                                Pop temppop = new Pop(this.x, this.y, "Pop", game);
-                                temppop.isDouble = true;
-                                GameEvents temppopE = new GameEvents();
-                            Game.gameObjects.add(temppop);
-                            Game.gameEvents.add(temppopE);
-                            if(Game.lastUpdateTime > limit){
-                                temppop.setState(false);
-                            }    
-                        } else if (((Bricks) temp).heal){
-                            this.lives ++;
-                            
-                            
-                        } else{
-                            ((Bricks) temp).game.updateScore(((Bricks) temp).id * 5);
-                        }
-                    }*/
                 }else if(temp instanceof BigLeg){
                     
                     Rectangle intersectionP = 
@@ -232,7 +222,7 @@ public class Pop extends GameObject{
         Graphics2D g2 = (Graphics2D) g;
         if(state){
             g2.drawImage(sprite, null, x, y);
-            System.out.println(toString());
+            //System.out.println(toString());
         }
     }
     
