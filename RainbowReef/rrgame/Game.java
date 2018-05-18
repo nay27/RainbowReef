@@ -8,12 +8,20 @@ package RainbowReef.rrgame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -353,7 +361,49 @@ public class Game extends JPanel implements Runnable{
             x += 30;
         }
     }
-    
+    public void checkHighScore(){
+        ArrayList<Integer> highScoreArray = new ArrayList<Integer>();
+        File  file = new File("rrresources/highscore.txt");
+        
+        //read the file of High Scores
+        try {
+			
+			FileReader fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+                        String line;
+			while ((line = bufferedReader.readLine()) != null) {
+                            
+                                //add the high scores from txt to arraylist
+				int temp = Integer.parseInt(line);
+                                highScoreArray.add(temp);
+			}
+			fileReader.close();
+                        
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+                Collections.sort(highScoreArray);
+                Collections.reverse(highScoreArray);
+                
+               if(score >= highScoreArray.get(0)){
+                   //score is the high score
+               } else {
+                   //score is not the high score
+               }
+        //wrtie the score onto highscore.txt
+        try {
+            
+                        FileWriter fileWriter = new FileWriter(file);
+                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                        bufferedWriter.newLine();
+                        bufferedWriter.write(score);
+                        fileWriter.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+               
+    }
     private String displayScore(){
         scoreString = "Score: ";
         String stScore = Integer.toString(score);
