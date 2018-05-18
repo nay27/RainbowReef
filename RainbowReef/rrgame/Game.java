@@ -8,7 +8,6 @@ package RainbowReef.rrgame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -19,10 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 /**
@@ -51,6 +48,7 @@ public class Game extends JPanel implements Runnable{
     private Pop pop;
     private Player katch;
     private TiledMap level1, level2, level3;
+    private SoundPlayer soundEffects;
     public static ArrayList<GameObject> gameObjects;
     public static ArrayList<GameEvents> gameEvents;
     static double lastUpdateTime;
@@ -139,6 +137,7 @@ public class Game extends JPanel implements Runnable{
     }
     
     private void init(){
+        soundEffects = new SoundPlayer();
         numBigLegs = 0;
         level1 = new TiledMap("rrresources/level1.txt");
         int y = 0;
@@ -315,7 +314,15 @@ public class Game extends JPanel implements Runnable{
     public int getScore(){
         return score;
     }
+    
+    public SoundPlayer getSoundEffects() {
+        return soundEffects;
+    }
 
+    public void setSoundEffects(SoundPlayer soundEffects) {
+        this.soundEffects = soundEffects;
+    }
+    
     public boolean isDoublePoints() {
         if(doublePoints == true){
             if(checkCounter() == 0){
@@ -414,7 +421,10 @@ public class Game extends JPanel implements Runnable{
     
     public static void main(String [] args){
         Game glt = new Game();
-        Thread me = new Thread(glt);
-        me.start();
+        SoundPlayer gameMusic = new SoundPlayer("rrresources/Music.wav");
+        Thread game = new Thread(glt);
+        Thread music = new Thread(gameMusic);
+        music.start();
+        game.start();
     }   
 }

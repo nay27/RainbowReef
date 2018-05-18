@@ -8,6 +8,7 @@ package RainbowReef.rrgame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,20 +75,31 @@ public class Pop extends GameObject{
                 
                 if(temp instanceof Player){
                     
+                    SoundPlayer effect = game.getSoundEffects();
+                    effect.setFile("rrresources/Sound_katch.wav");
+                    Thread sound = new Thread(effect);
+                    sound.start();
+                    try{
+                        sound.join();
+                    }catch(InterruptedException e){
+                        System.out.println(e.getMessage());
+                        System.out.println(Arrays.toString(e.getStackTrace()));
+                    }
+                    
                     if(this.getY() >= 605){
                         this.setyVel(yVel);
                         break;
                     }
 
-                    if(getX() >= temp.getX() + (temp.getWidth() / 2) - 10 &&
-                            getX() <= temp.getX() + (temp.getWidth() / 2) + 10){
+                    if(getX() > temp.getX() + (temp.getWidth() / 2 - 25) &&
+                            getX() < temp.getX() + (temp.getWidth() / 2 + 25)){
                         setxVel(0);
                     }
-                    else if(getX() < temp.getX() + (temp.getWidth() / 2 - 10))
+                    else if(getX() < temp.getX() + (temp.getWidth() / 2 - 25))
                     {
                         setxVel(-3);
                     }
-                    else if(getX() > temp.getX() + (temp.getWidth() / 2 + 10))
+                    else if(getX() > temp.getX() + (temp.getWidth() / 2 + 25))
                     {
                         setxVel(3);
                     }
@@ -120,6 +132,17 @@ public class Pop extends GameObject{
                     this.setyVel(-yVel);
                     break;
                 }else if(temp instanceof Bricks){
+                    
+                    SoundPlayer effect = game.getSoundEffects();
+                    effect.setFile("rrresources/Sound_block.wav");
+                    Thread sound = new Thread(effect);
+                    sound.start();
+                    try{
+                        sound.join();
+                    }catch(InterruptedException e){
+                        System.out.println(e.getMessage());
+                        System.out.println(Arrays.toString(e.getStackTrace()));
+                    }
                     
                     Rectangle intersectionP = 
                             this.getBounds().intersection(temp.getBounds());
@@ -166,6 +189,17 @@ public class Pop extends GameObject{
                     break;
                 }else if(temp instanceof BigLeg){
                     
+                    SoundPlayer effect = game.getSoundEffects();
+                    effect.setFile("rrresources/Sound_bigleg.wav");
+                    Thread sound = new Thread(effect);
+                    sound.start();
+                    try{
+                        sound.join();
+                    }catch(InterruptedException e){
+                        System.out.println(e.getMessage());
+                        System.out.println(Arrays.toString(e.getStackTrace()));
+                    }
+                    
                     Rectangle intersectionP = 
                             this.getBounds().intersection(temp.getBounds());
                     if(intersectionP.width >= intersectionP.height)
@@ -209,6 +243,7 @@ public class Pop extends GameObject{
             x = SPAWN_X;
             this.setxVel(0);
             this.setyVel(START_SPEED);
+            playLiveLost();
             //--lives;
         }
         else if(y <= Game.MIN_Y){
@@ -225,7 +260,19 @@ public class Pop extends GameObject{
             //System.out.println(toString());
         }
     }
-    
+    private void playLiveLost(){
+        
+        SoundPlayer effect = game.getSoundEffects();
+        effect.setFile("rrresources/Sound_lost.wav");
+        Thread sound = new Thread(effect);
+        sound.start();
+        try{
+            sound.join();
+        }catch(InterruptedException e){
+            System.out.println(e.getMessage());
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+    }
     @Override
     public String toString(){
         return "y is " + y + " xVel is " + xVel +
