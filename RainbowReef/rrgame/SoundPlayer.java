@@ -23,6 +23,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class SoundPlayer implements Runnable{
     
     private String fileName;
+    private static final String MUSIC = "rrresources/Music.wav";
     
     public SoundPlayer(){
         fileName = "";
@@ -48,6 +49,23 @@ public class SoundPlayer implements Runnable{
         }
     }
     
+    private void loopMusic(){
+        try{
+            File soundFile = new File(fileName);
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            AudioFormat format = ais.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            Clip clip = (Clip) AudioSystem.getLine(info);
+            clip.open(ais);
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }catch (LineUnavailableException | IOException | 
+                UnsupportedAudioFileException e) {
+            System.out.println(e.getMessage());
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+    }
+    
     public String getFile(){
         return fileName;
     }
@@ -58,7 +76,11 @@ public class SoundPlayer implements Runnable{
     
     @Override
     public void run() {
-        playSound();
+        if(this.fileName.equals(MUSIC)){
+            loopMusic();
+        }else{
+            playSound();
+        }
     }
     
 }

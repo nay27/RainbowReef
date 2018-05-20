@@ -29,6 +29,10 @@ import javax.swing.JPanel;
 public class Game extends JPanel implements Runnable{
     
     private boolean isRunning = false;
+    private boolean atMenu = true;
+    private boolean atLevel1 = false;
+    private boolean atLevel2 = false;
+    private boolean atLevel3 = false;
     private boolean doublePoints = false;
     private int fps = 60;
     private int frameCount = 0;
@@ -48,6 +52,7 @@ public class Game extends JPanel implements Runnable{
     private Pop pop;
     private Player katch;
     private TiledMap level1, level2, level3;
+    private MainMenu mainMenu;
     private SoundPlayer soundEffects;
     public static ArrayList<GameObject> gameObjects;
     public static ArrayList<GameEvents> gameEvents;
@@ -60,6 +65,7 @@ public class Game extends JPanel implements Runnable{
         gameWorld = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
         gameBack = new Background();
+        mainMenu = new MainMenu(this);
         gameObjects = new ArrayList<>();
         gameEvents = new ArrayList<>();
         init();
@@ -69,8 +75,7 @@ public class Game extends JPanel implements Runnable{
     public void run(){
         new Window(SCREEN_WIDTH, SCREEN_HEIGHT ,"Rainbow Reef", this);
         this.isRunning = true;
-        gameLoop();
-        
+        gameLoop();       
     }
     //Game loop, rendering, and updating methods
     private void gameLoop(){
@@ -133,10 +138,14 @@ public class Game extends JPanel implements Runnable{
                 isRunning = false;
                 repaint();
             }
+            if(!isRunning){
+                System.exit(0);
+            }
         }
     }
     
     private void init(){
+        this.addMouseListener(new MouseInput(mainMenu));
         soundEffects = new SoundPlayer();
         numBigLegs = 0;
         level1 = new TiledMap("rrresources/level1.txt");
@@ -219,64 +228,75 @@ public class Game extends JPanel implements Runnable{
         
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if(isRunning){
+        
+        //If the game is running, render the main menu or one of the levels
+        if(this.pop.getLives() != 0){
             Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
             
-            //Render background to buffer
-            gameBack.render(buffer);
-            
-            //Render all game objects to buffer
-            for(int i = 0; i < gameObjects.size(); i++){
-                GameObject temp = gameObjects.get(i);
-                temp.render(buffer);
-            }
-            
-            //Render score, double points if so, and pop lives to buffer
-            buffer.scale(3, 3);
-            if(isDoublePoints())
-                buffer.drawString("Double Points!", 200, 229);
-            buffer.drawString(displayScore(), 15, 229);
-            buffer.scale(.33 + .01,.33 + .01);
-            renderPopLives(buffer);
-            
-            //Render buffer to the gameScreen
-            BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
-                Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
-            g2.drawImage(displayImage, null, 0, 0);
-            
-            }else{
-                //This clause is entered if the game ends
-                Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
+            //Render the main menu
+            if(atMenu){
+                mainMenu.render(buffer);
+            }else if(atLevel1){
+                //Render background to buffer
                 gameBack.render(buffer);
-        
+            
+                //Render all game objects to buffer
                 for(int i = 0; i < gameObjects.size(); i++){
                     GameObject temp = gameObjects.get(i);
                     temp.render(buffer);
                 }
-                BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
+            
+                //Render score, double points if so, and pop lives to buffer
+                buffer.scale(3, 3);
+                if(isDoublePoints())
+                    buffer.drawString("Double Points!", 200, 229);
+                buffer.drawString(displayScore(), 15, 229);
+                buffer.scale(.33 + .01,.33 + .01);
+                renderPopLives(buffer);
+            }
+            BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
                 Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
-                System.out.println("Game Over");
-                g2.drawImage(displayImage, null, 0, 0);
-                g2.setColor(Color.red);
-                g2.scale(5, 5);
-                g2.drawString(gameOver, Game.SCREEN_WIDTH/30, Game.SCREEN_HEIGHT/10);
+            g2.drawImage(displayImage, null, 0, 0);
+        }else{
+            //This clause is entered if the game ends
+            Graphics2D buffer = (Graphics2D) gameWorld.createGraphics();
+            gameBack.render(buffer);
+        
+            for(int i = 0; i < gameObjects.size(); i++){
+                GameObject temp = gameObjects.get(i);
+                temp.render(buffer);
+                }
+            BufferedImage displayImage = gameWorld.getSubimage(0, 0, 
+            Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+            System.out.println("Game Over");
+            g2.drawImage(displayImage, null, 0, 0);
+            g2.setColor(Color.red);
+            g2.scale(5, 5);
+            g2.drawString(gameOver, Game.SCREEN_WIDTH/30, Game.SCREEN_HEIGHT/10);
         }
         g2.dispose();
     }
         
     private void update(){
-        for(int i = 0; i< gameObjects.size(); i++){
-            GameObject temp = gameObjects.get(i);
-            GameEvents tempE = gameEvents.get(i);
+        //Update menu choices
+        if(atMenu){
+            mainMenu.update();
+        }
+        //Update only when on one of the playable levels
+        if(atLevel1 || atLevel2 || atLevel3){
+            for(int i = 0; i< gameObjects.size(); i++){
+                GameObject temp = gameObjects.get(i);
+                GameEvents tempE = gameEvents.get(i);
             
-            if(!temp.getState()){
-               gameObjects.remove(temp);
-               gameEvents.remove(tempE);
-            }else{
-                tempE.addObserver(temp);
-                tempE.setChanged();
-                tempE.notifyObservers();
-            } 
+                if(!temp.getState()){
+                   gameObjects.remove(temp);
+                   gameEvents.remove(tempE);
+                }else{
+                    tempE.addObserver(temp);
+                    tempE.setChanged();
+                    tempE.notifyObservers();
+                } 
+            }
         }
     }
     
@@ -354,6 +374,42 @@ public class Game extends JPanel implements Runnable{
         score = 0;
     }
     
+    public boolean isAtMenu() {
+        return atMenu;
+    }
+
+    public void setAtMenu(boolean atMenu) {
+        this.atMenu = atMenu;
+    }
+
+    public boolean isAtLevel1() {
+        return atLevel1;
+    }
+
+    public void setAtLevel1(boolean atLevel1) {
+        this.atLevel1 = atLevel1;
+    }
+
+    public boolean isAtLevel2() {
+        return atLevel2;
+    }
+
+    public void setAtLevel2(boolean atLevel2) {
+        this.atLevel2 = atLevel2;
+    }
+
+    public boolean isAtLevel3() {
+        return atLevel3;
+    }
+
+    public void setAtLevel3(boolean atLevel3) {
+        this.atLevel3 = atLevel3;
+    }
+    
+    public void setisRunning(boolean isRunning){
+        this.isRunning = isRunning;
+    }
+    
     private void renderPopLives(Graphics g){
         
         Graphics2D g2 = (Graphics2D) g;
@@ -368,6 +424,7 @@ public class Game extends JPanel implements Runnable{
             x += 30;
         }
     }
+    
     public void checkHighScore(){
         ArrayList<Integer> highScoreArray = new ArrayList<Integer>();
         File  file = new File("rrresources/highscore.txt");
