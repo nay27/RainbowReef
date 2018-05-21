@@ -118,10 +118,7 @@ public class Player extends GameObject implements Observer {
     //toString for debugging
     @Override
     public String toString(){
-        return " x1 is " + x + " x2 is " + (x + getWidth())
-                + "xPoint is: " + xPoint + " SPEED: "+ SPEED 
-                + " left pressed: " + leftPressed +
-                " right pressed: " + rightPressed;
+        return " x1 is " + x + " x2 is " + (x + getWidth());
     }
 
     public double getxPoint() {

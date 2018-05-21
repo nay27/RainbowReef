@@ -86,22 +86,29 @@ public class Pop extends GameObject{
                         System.out.println(Arrays.toString(e.getStackTrace()));
                     }
                     
-                    if(this.getY() >= 605){
+                    if(this.getY() >= 600){
                         this.setyVel(yVel);
                         break;
                     }
-
-                    if(getX() > temp.getX() + (temp.getWidth() / 2 - 25) &&
-                            getX() < temp.getX() + (temp.getWidth() / 2 + 25)){
-                        setxVel(0);
+                    else if(getX() > temp.getX() + (temp.getWidth() / 2 - 25) 
+                            && getX() < temp.getX() + (temp.getWidth() / 2 + 25))
+                    {
+                        if(!collide)
+                            setxVel(0);
                     }
                     else if(getX() < temp.getX() + (temp.getWidth() / 2 - 25))
                     {
-                        setxVel(-3);
+                        if(!collide){
+                            setxVel(-3);
+                            collide = true;
+                        }
                     }
                     else if(getX() > temp.getX() + (temp.getWidth() / 2 + 25))
                     {
-                        setxVel(3);
+                        if(!collide){
+                            setxVel(3);
+                            collide = true;
+                        }
                     }
                     /*int zone1 = temp.getX() + 15;
                     int zone2 = zone1 + 16;
@@ -244,10 +251,10 @@ public class Pop extends GameObject{
             this.setxVel(0);
             this.setyVel(START_SPEED);
             playLiveLost();
-            //--lives;
+            //lives;
+            collide = false;
         }
-        else if(y <= Game.MIN_Y){
-            y = (int) Game.MIN_Y;
+        else if(y <= Game.MIN_Y - 40){
             this.setyVel(-yVel);
         }
     }
@@ -257,7 +264,7 @@ public class Pop extends GameObject{
         Graphics2D g2 = (Graphics2D) g;
         if(state){
             g2.drawImage(sprite, null, x, y);
-            //System.out.println(toString());
+            System.out.println(toString());
         }
     }
     private void playLiveLost(){
@@ -275,8 +282,7 @@ public class Pop extends GameObject{
     }
     @Override
     public String toString(){
-        return "y is " + y + " xVel is " + xVel +
-                " yVel is " + yVel;
+        return "y is " + y + " x is " + x + " collide: " + collide;
     }
 
     public double getAngle() {
