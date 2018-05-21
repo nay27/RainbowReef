@@ -136,6 +136,7 @@ public class Game extends JPanel implements Runnable{
             }
             if(!gameObjects.contains(pop)){
                 isRunning = false;
+                mainMenu.addScore(score);
                 repaint();
             }
             if(!isRunning){
@@ -425,49 +426,6 @@ public class Game extends JPanel implements Runnable{
         }
     }
     
-    public void checkHighScore(){
-        ArrayList<Integer> highScoreArray = new ArrayList<Integer>();
-        File  file = new File("rrresources/highscore.txt");
-        
-        //read the file of High Scores
-        try {
-			
-			FileReader fileReader = new FileReader(file);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-                        String line;
-			while ((line = bufferedReader.readLine()) != null) {
-                            
-                                //add the high scores from txt to arraylist
-				int temp = Integer.parseInt(line);
-                                highScoreArray.add(temp);
-			}
-			fileReader.close();
-                        
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-                Collections.sort(highScoreArray);
-                Collections.reverse(highScoreArray);
-                
-               if(score >= highScoreArray.get(0)){
-                   //score is the high score
-               } else {
-                   //score is not the high score
-               }
-        //wrtie the score onto highscore.txt
-        try {
-            
-                        FileWriter fileWriter = new FileWriter(file);
-                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                        bufferedWriter.newLine();
-                        bufferedWriter.write(score);
-                        fileWriter.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
-               
-    }
     private String displayScore(){
         scoreString = "Score: ";
         String stScore = Integer.toString(score);
