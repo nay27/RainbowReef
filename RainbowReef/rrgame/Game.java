@@ -54,8 +54,14 @@ public class Game extends JPanel implements Runnable{
     private TiledMap level1, level2, level3;
     private MainMenu mainMenu;
     private SoundPlayer soundEffects;
-    public static ArrayList<GameObject> gameObjects;
-    public static ArrayList<GameEvents> gameEvents;
+    private ArrayList<GameObject> gameObjects;
+    private ArrayList<GameObject> level2Objects;
+    private ArrayList<GameObject> level3Objects;
+    private ArrayList<GameEvents> gameEvents;
+    private ArrayList<GameEvents> level2Events;
+    private ArrayList<GameEvents> level3Events;
+    
+    
     static double lastUpdateTime;
     
     //Constructor
@@ -67,7 +73,11 @@ public class Game extends JPanel implements Runnable{
         gameBack = new Background();
         mainMenu = new MainMenu(this);
         gameObjects = new ArrayList<>();
+        level2Objects = new ArrayList<>();
+        level3Objects = new ArrayList<>();
         gameEvents = new ArrayList<>();
+        level2Events = new ArrayList<>();
+        level3Events = new ArrayList<>();
         init();
     }
     //Thread method
@@ -134,7 +144,7 @@ public class Game extends JPanel implements Runnable{
 
                 now = System.nanoTime();
             }
-            if(!gameObjects.contains(pop)){
+            if(!pop.getState()){
                 isRunning = false;
                 mainMenu.addScore(score);
                 repaint();
@@ -150,83 +160,15 @@ public class Game extends JPanel implements Runnable{
         soundEffects = new SoundPlayer();
         numBigLegs = 0;
         level1 = new TiledMap("rrresources/level1.txt");
-        int y = 0;
-        int x = 0;
-        for(int i = 0; i < TiledMap.NUM_ROWS; i++){
-            for(int j = 0; j < TiledMap.NUM_COLS; j++){
-                char fileValue = level1.getTile(i, j);
-                //System.out.println(fileValue);
-                switch(fileValue){
-                    case 'k':
-                        katch = new Player(x, 625, "Katch", this);
-                        GameEvents playerE = new GameEvents();
-                        Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
-                        this.addKeyListener(playerControl);
-                        gameObjects.add(katch);
-                        gameEvents.add(playerE);
-                        break;
-                    case 'p':
-                        pop = new Pop(x, y, "Pop", this);
-                        GameEvents popE = new GameEvents();
-                        gameObjects.add(pop);
-                        gameEvents.add(popE);
-                        break;
-                    case 'b':
-                        BigLeg bigLeg = new BigLeg(x, y, "BigLeg", 
-                                this, numBigLegs);
-                        GameEvents blE = new GameEvents();
-                        gameObjects.add(bigLeg);
-                        gameEvents.add(blE);
-                        numBigLegs++;
-                        break;
-                    case '1':
-                        Bricks brick1 = new Bricks(x, y, "Block_solid", this);
-                        GameEvents brickEvent1 = new GameEvents();
-                        gameObjects.add(brick1);
-                        gameEvents.add(brickEvent1);
-                        break;
-                    case '2':
-                        Bricks brick2 = new Bricks(x, y, "Block1", this);
-                        GameEvents brickEvent2 = new GameEvents();
-                        gameObjects.add(brick2);
-                        gameEvents.add(brickEvent2);
-                        break;
-                    case '3':
-                        Bricks brick3 = new Bricks(x, y, "Block2", this);
-                        GameEvents brickEvent3 = new GameEvents();
-                        gameObjects.add(brick3);
-                        gameEvents.add(brickEvent3);
-                        break;
-                    case '9':
-                        Bricks brickLife = new Bricks(x, y, "Block_life", this);
-                        GameEvents brickEventLife = new GameEvents();
-                        gameObjects.add(brickLife);
-                        gameEvents.add(brickEventLife);
-                        break;
-                    case '?':
-                        Bricks brickBonus = new Bricks(x, y, "Block_split", this);
-                        GameEvents brickEventBonus = new GameEvents();
-                        gameObjects.add(brickBonus);
-                        gameEvents.add(brickEventBonus);
-                    default:
-                        break;
-                }
-                x += 40;
-            }
-            x = 0;
-            y += 20;
-        }
-        /*katch = new Player(SCREEN_WIDTH/2, 500, "Katch", this);
-        popE.addObserver(pop);
-        Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
-        this.addKeyListener(playerControl);
-        gameObjects.add(katch);
-        gameEvents.add(popE);*/     
+        level2 = new TiledMap("rrresources/level2.txt");
+        level3 = new TiledMap("rrresources/level3.txt");
+        initializeLevel(level1);
+        initializeLevel(level2);
+        initializeLevel(level3);   
     }
     
     @Override
     protected void paintComponent(Graphics g){
-        
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
@@ -237,10 +179,10 @@ public class Game extends JPanel implements Runnable{
             //Render the main menu
             if(atMenu){
                 mainMenu.render(buffer);
-            }else if(atLevel1){
+            }else if(atLevel1 || atLevel2 || atLevel3){
+                
                 //Render background to buffer
                 gameBack.render(buffer);
-            
                 //Render all game objects to buffer
                 for(int i = 0; i < gameObjects.size(); i++){
                     GameObject temp = gameObjects.get(i);
@@ -299,6 +241,7 @@ public class Game extends JPanel implements Runnable{
                 } 
             }
         }
+        checkLevel();
     }
     
     public int getObjectListSize(){
@@ -423,6 +366,285 @@ public class Game extends JPanel implements Runnable{
         for(int i = 0; i < pop.getLives(); i++){
             g2.drawImage(pop.getSprite(), x, y, null);
             x += 30;
+        }
+    }
+    
+    private void checkLevel(){
+        if(numBigLegs == 12 && atLevel2 == false){
+            gameObjects.clear();
+            gameEvents.clear();
+            gameObjects.addAll(level2Objects);
+            gameEvents.addAll(level2Events);
+            atLevel2 = true;
+        }
+        if(numBigLegs == 8 && atLevel3 == false){
+            gameObjects.clear();
+            gameEvents.clear();
+            gameObjects.addAll(level3Objects);
+            gameEvents.addAll(level3Events);
+            atLevel3 = true;
+        }
+    }
+    
+    private void initializeLevel(TiledMap level){
+        int y = 0;
+        int x = 0;
+        for(int i = 0; i < TiledMap.NUM_ROWS; i++){
+            for(int j = 0; j < TiledMap.NUM_COLS; j++){
+                char fileValue = level.getTile(i, j);
+                //System.out.println(fileValue);
+                switch(fileValue){
+                    case 'k':
+                        if(level.equals(level1)){
+                            katch = new Player(x, 625, "Katch", this);
+                            GameEvents playerE = new GameEvents();
+                            Controls playerControl = new Controls (katch, KeyEvent.VK_RIGHT, KeyEvent.VK_LEFT);
+                            this.addKeyListener(playerControl);
+                            gameObjects.add(katch);
+                            gameEvents.add(playerE);
+                        }else if(level.equals(level2)){
+                            katch.setX(x);
+                            GameEvents playerE = new GameEvents();
+                            level2Objects.add(katch);
+                            level2Events.add(playerE);
+                        }else if(level.equals(level3)){
+                            katch.setX(x);
+                            GameEvents playerE = new GameEvents();
+                            level3Objects.add(katch);
+                            level3Events.add(playerE);
+                        }
+                        break;
+                    case 'p':
+                        if(level.equals(level1)){
+                            pop = new Pop(x, y, "Pop", this);
+                            GameEvents popE = new GameEvents();
+                            gameObjects.add(pop);
+                            gameEvents.add(popE);
+                        }else if(level.equals(level2)){
+                            pop.setX(x);
+                            pop.setY(y);
+                            GameEvents popE = new GameEvents();
+                            level2Objects.add(pop);
+                            level2Events.add(popE);
+                        }else if(level.equals(level3)){
+                            pop.setX(x);
+                            pop.setY(y);
+                            GameEvents popE = new GameEvents();
+                            level3Objects.add(pop);
+                            level3Events.add(popE);
+                        }
+                        break;
+                    case 'b':
+                        if(level.equals(level1)){
+                            BigLeg bigLeg = new BigLeg(x, y, "BigLeg", 
+                                this, numBigLegs);
+                            GameEvents blE = new GameEvents();
+                            gameObjects.add(bigLeg);
+                            gameEvents.add(blE);
+                            numBigLegs++;
+                        }else if(level.equals(level2)){
+                            BigLeg bigLeg = new BigLeg(x, y, "BigLeg", 
+                                this, numBigLegs);
+                            GameEvents blE = new GameEvents();
+                            level2Objects.add(bigLeg);
+                            level2Events.add(blE);
+                            numBigLegs++;
+                        }else if(level.equals(level3)){
+                            BigLeg bigLeg = new BigLeg(x, y, "BigLeg", 
+                                this, numBigLegs);
+                            GameEvents blE = new GameEvents();
+                            level3Objects.add(bigLeg);
+                            level3Events.add(blE);
+                            numBigLegs++;
+                        }
+                        break;
+                    case '1':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block_solid", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block_solid", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block_solid", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '2':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block1", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block1", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block1", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '3':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block2", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block2", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block2", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '4':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block3", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block3", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block3", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '5':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block4", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block4", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block4", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '6':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block5", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block5", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block5", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '7':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block6", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block6", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block6", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '8':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block7", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block7", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block7", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '9':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block_life", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block_life", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block_life", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    case '?':
+                        if(level.equals(level1)){
+                            Bricks brick = new Bricks(x, y, "Block_split", this);
+                            GameEvents brickEvent = new GameEvents();
+                            gameObjects.add(brick);
+                            gameEvents.add(brickEvent);
+                        }else if(level.equals(level2)){
+                            Bricks brick = new Bricks(x, y, "Block_split", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level2Objects.add(brick);
+                            level2Events.add(brickEvent);
+                        }else if(level.equals(level3)){
+                            Bricks brick = new Bricks(x, y, "Block_split", this);
+                            GameEvents brickEvent = new GameEvents();
+                            level3Objects.add(brick);
+                            level3Events.add(brickEvent);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                x += 40;
+            }
+            x = 0;
+            y += 20;
         }
     }
     

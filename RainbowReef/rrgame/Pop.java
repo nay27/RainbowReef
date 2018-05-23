@@ -36,7 +36,7 @@ public class Pop extends GameObject{
         angle = 0;
         SPAWN_Y = y;
         SPAWN_X = x;
-        lives = 5;
+        lives = 10;
     }
     
     public int getLives(){
@@ -136,7 +136,6 @@ public class Pop extends GameObject{
                     if(temp.isBreakable()){
                         temp.setState(false);
                         Bricks brick = (Bricks) temp;
-                        
                         //Check for special bricks
                         if(brick.getId() == 9){
                             game.setDoublePoints(true);

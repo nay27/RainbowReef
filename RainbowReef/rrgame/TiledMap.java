@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  *
@@ -56,5 +58,31 @@ public class TiledMap {
 
     public void setTiles(char[][] tiles) {
         this.tiles = tiles;
+    }
+    
+        @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.inputFile);
+        hash = 29 * hash + Arrays.deepHashCode(this.tiles);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TiledMap other = (TiledMap) obj;
+        if (!Objects.equals(this.inputFile, other.inputFile)) {
+            return false;
+        }
+        return Arrays.deepEquals(this.tiles, other.tiles);
     }
 }
