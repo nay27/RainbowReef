@@ -3,4 +3,4 @@
 ## Todo : 
   - Change Name of repo
   - add Members to repo.
-  - List team members in this README.MD file
+ Team Members: Naylin, John
