@@ -16,10 +16,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -37,6 +40,7 @@ public class Game extends JPanel implements Runnable{
     private int fps = 60;
     private int frameCount = 0;
     private static int score = 0;
+    private static int highScore = 0;
     private int doublePointsTicks;
     private final double GAME_HERTZ = 30.0;
     private final String gameOver = "Game Over, You Lose";
@@ -150,6 +154,26 @@ public class Game extends JPanel implements Runnable{
                 repaint();
             }
             if(!isRunning){
+             File scoreFile = new File("rrresources/highscore.txt");
+             Path path = scoreFile.toPath();
+            BufferedReader scoreReader = null;
+            try{
+            scoreReader = Files.newBufferedReader(path);
+            String line = null;
+            while((line = scoreReader.readLine()) != null){
+                 int temp = Integer.parseInt(line);
+                 if (temp > highScore){
+                     highScore = temp;
+                 }
+            }
+            }catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+            if(score >= highScore){
+               JOptionPane.showMessageDialog(this,"CONGRATS!\n You have the High Score!!!\n Your Score is: " + score); 
+            } else{
+             JOptionPane.showMessageDialog(this,"Your Score is: " + score + "\n" + "High Score is: " + highScore);
+            }
                 System.exit(0);
             }
         }
@@ -277,6 +301,10 @@ public class Game extends JPanel implements Runnable{
     
     public int getScore(){
         return score;
+    }
+    
+    public static void setHighScore(int x){
+        highScore = x;
     }
     
     public SoundPlayer getSoundEffects() {
