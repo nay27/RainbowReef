@@ -189,8 +189,13 @@ public class MainMenu{
         
             Collections.sort(tempScore);
             Collections.reverse(tempScore);
-        
-            for(i = 0; i < tempScore.size(); i++){
+            
+            int maxScore = 15;
+            if (tempScore.size()< maxScore){
+                maxScore = tempScore.size();
+            }
+            
+            for(i = 0; i < maxScore; i++){
                 int temp = tempScore.get(i);
                 String renderLine = (i+1) + "." + " " + temp;
                 g2.drawString(renderLine, x, y);
