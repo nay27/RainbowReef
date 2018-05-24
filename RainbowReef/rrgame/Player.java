@@ -111,7 +111,7 @@ public class Player extends GameObject implements Observer {
     @Override
     public void render(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        System.out.println(toString());
+        //System.out.println(toString());
         if(state)
             g2.drawImage(sprite, null, x, y);
     }

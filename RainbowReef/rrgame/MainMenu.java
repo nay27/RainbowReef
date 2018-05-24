@@ -38,6 +38,7 @@ public class MainMenu{
     private ArrayList<String> scores;
     private int currentSelection;
     private int clickX, clickY;
+    private ArrayList<Integer> tempScore;
     
     /**
      *
@@ -173,19 +174,29 @@ public class MainMenu{
         int y = 50;
         int x = Game.SCREEN_WIDTH/4 - 30;
         int i = 1;
-        
+        tempScore = new ArrayList<>();
         try{
             scoreReader = Files.newBufferedReader(path);
             String line = null;
             while((line = scoreReader.readLine()) != null){
-                String renderLine = i + "." + " " + line;
-                g2.drawString(renderLine, x, y);
-                y += 10;
-                i++;
+                int temp = Integer.parseInt(line);
+                System.out.println("Testing score: " + temp);
+                tempScore.add(temp);
             }
         }catch(IOException e){
             System.out.println(e.getMessage());
         }
+        
+            Collections.sort(tempScore);
+            Collections.reverse(tempScore);
+        
+            for(i = 0; i < tempScore.size(); i++){
+                int temp = tempScore.get(i);
+                String renderLine = (i+1) + "." + " " + temp;
+                g2.drawString(renderLine, x, y);
+                y += 10;
+                
+            }
         
         if(scoreReader != null){
             try{

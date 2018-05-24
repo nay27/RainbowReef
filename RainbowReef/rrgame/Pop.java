@@ -50,12 +50,12 @@ public class Pop extends GameObject{
     }
     
     private void move(){
-        
+        checkCollision();
+        checkBorder();
         y += yVel;
         x += xVel;
         this.getHitBox().setBounds(x, y, width, height);
-        checkCollision();
-        checkBorder();
+        
     }
     
     @Override
@@ -88,25 +88,25 @@ public class Pop extends GameObject{
                         this.setyVel(yVel);
                         break;
                     }
-                    else if(getX() > temp.getX() + (temp.getWidth() / 2 - 25) 
-                            && getX() < temp.getX() + (temp.getWidth() / 2 + 25))
-                    {
-                        if(!collide)
-                            setxVel(0);
+                    else if(getX() > temp.getX() + (temp.getWidth() / 2 - 15) 
+                            && getX() < temp.getX() + (temp.getWidth() / 2 + 15))
+                    {   
+                            this.setxVel((xVel + 0));
+                        System.out.println("Teting katch: MIDDLE xvel: " + getxVel());
                     }
-                    else if(getX() < temp.getX() + (temp.getWidth() / 2 - 25))
-                    {
-                        if(!collide){
-                            setxVel(-3);
+                    else if(getX() < temp.getX() + (temp.getWidth() / 2 - 15))
+                    {   
+                            this.setxVel((xVel - 2));
                             collide = true;
-                        }
+                        
+                        System.out.println("Teting katch: LEFT xvel: " + getxVel());
                     }
-                    else if(getX() > temp.getX() + (temp.getWidth() / 2 + 25))
-                    {
-                        if(!collide){
-                            setxVel(3);
+                    else if(getX() > temp.getX() + (temp.getWidth() / 2 + 15))
+                    {   
+                            this.setxVel((xVel + 2));
                             collide = true;
-                        }
+                        
+                        System.out.println("Teting katch: RIGHT xvel: " + getxVel());
                     }
                     this.setyVel(-yVel);
                     break;
@@ -221,7 +221,7 @@ public class Pop extends GameObject{
         Graphics2D g2 = (Graphics2D) g;
         if(state){
             g2.drawImage(sprite, null, x, y);
-            System.out.println(toString());
+            //System.out.println(toString());
         }
     }
     private void playLiveLost(){
