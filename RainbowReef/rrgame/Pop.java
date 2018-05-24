@@ -23,7 +23,7 @@ public class Pop extends GameObject{
     private double xVel;
     private final int SPAWN_Y;
     private final int SPAWN_X;
-    private final int MAX_SPEED = 20;
+    private final int MAX_SPEED = 25;
     private final int START_SPEED = 8;
     boolean collide = false;
     boolean isDouble = false;
@@ -92,23 +92,22 @@ public class Pop extends GameObject{
                             && getX() < temp.getX() + (temp.getWidth() / 2 + 15))
                     {   
                             this.setxVel((xVel + 0));
-                        System.out.println("Teting katch: MIDDLE xvel: " + getxVel());
                     }
                     else if(getX() < temp.getX() + (temp.getWidth() / 2 - 15))
                     {   
                             this.setxVel((xVel - 2));
                             collide = true;
                         
-                        System.out.println("Teting katch: LEFT xvel: " + getxVel());
                     }
                     else if(getX() > temp.getX() + (temp.getWidth() / 2 + 15))
                     {   
                             this.setxVel((xVel + 2));
                             collide = true;
-                        
-                        System.out.println("Teting katch: RIGHT xvel: " + getxVel());
+
                     }
-                    this.setyVel(-yVel);
+                    if(yVel < MAX_SPEED){
+                    this.setyVel(-(yVel+1));
+                    }
                     break;
                 }else if(temp instanceof Bricks){
                     

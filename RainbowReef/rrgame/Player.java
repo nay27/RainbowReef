@@ -23,7 +23,7 @@ public class Player extends GameObject implements Observer {
         super(x, y, img, game);
         xPoint = (double) x;
         yPoint = (double) y;
-        SPEED = .01;
+        SPEED = .025;
         
     }
     //Getters, setters, and togglers
