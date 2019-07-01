@@ -25,7 +25,8 @@ public class Pop extends GameObject{
     private final int SPAWN_X;
     private final int MAX_SPEED = 25;
     private final int START_SPEED = 8;
-    boolean collide = false;
+    private double deadTime, spawnTime;
+    boolean collide = false, spawn = false;
     boolean isDouble = false;
     
     Pop(int x, int y, String img, Game game){
@@ -37,6 +38,8 @@ public class Pop extends GameObject{
         SPAWN_Y = y;
         SPAWN_X = x;
         lives = 10;
+        spawn = true;
+        spawnTime = System.nanoTime()/1000000000.0;
     }
     
     public int getLives(){
@@ -50,11 +53,18 @@ public class Pop extends GameObject{
     }
     
     private void move(){
+        if(spawn){
+            System.out.println("testing spawntime: " + spawnTime);
+            System.out.println("testing currtime: " + game.getTime());
+            while((spawnTime+2 > game.getTime())){
+            }
+        }
         checkCollision();
         checkBorder();
         y += yVel;
         x += xVel;
         this.getHitBox().setBounds(x, y, width, height);
+        spawn = false;
         
     }
     
@@ -204,11 +214,14 @@ public class Pop extends GameObject{
         if(y >= Game.SCREEN_HEIGHT){
             y = SPAWN_Y;
             x = SPAWN_X;
+            spawnTime = System.nanoTime()/1000000000.0;
             this.setxVel(0);
             this.setyVel(START_SPEED);
             playLiveLost();
             lives--;
             collide = false;
+            spawn = true;
+            
         }
         else if(y <= Game.MIN_Y - 40){
             this.setyVel(-yVel);

@@ -64,6 +64,7 @@ public class Game extends JPanel implements Runnable{
     private ArrayList<GameEvents> gameEvents;
     private ArrayList<GameEvents> level2Events;
     private ArrayList<GameEvents> level3Events;
+    private double currTime;
     
     
     static double lastUpdateTime;
@@ -93,6 +94,7 @@ public class Game extends JPanel implements Runnable{
     }
     //Game loop, rendering, and updating methods
     private void gameLoop(){
+        currTime = System.nanoTime()/1000000000.0;
         final double TIME_BTWN_UPDATES = 1000000000 / GAME_HERTZ;
 
         final int MAX_UPDATES_TO_RENDER = 1;
@@ -266,6 +268,10 @@ public class Game extends JPanel implements Runnable{
             }
         }
         checkLevel();
+    }
+    
+    public double getTime(){
+        return currTime;
     }
     
     public int getObjectListSize(){
